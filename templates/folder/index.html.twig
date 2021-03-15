@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Folder index{% endblock %}
+{% block title %}Norlog{% endblock %}
 
 {% block body %}
+
     <h1>Folder index</h1>
 
     <table class="table">
@@ -53,5 +54,32 @@
         </tbody>
     </table>
 
-    <a href="{{ path('folder_new') }}">Create new</a>
+    {#
+    <div class="container" style="text-align: center">
+        <div class="row justify-content-md-center">
+            <div class="col-12">
+                <div class="row justify-content-md-center">
+                    <h1 style="font-size: 8rem; position: absolute; top: 10%; left: 50%; transform: translateX(-50%)">Norlog</h1>
+                </div>
+                {% for folder in folders %}
+                <div class="row justify-content-md-center">
+                    <div class="col-3">
+                        <div class="input-group">
+
+                            <button type="submit" class="btn btn-primary">OK</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-md-center">
+                    <div class="col-3">
+                        <a href="{{ path('folder_new') }}" type="button" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%)">Créer un dossier</a>
+                        <a href="{{ path('folder_show', {'id': folder.id}) }}" type="button" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; bottom: 10%; left: 10%; transform: translateX(-50%)">Liste dossiers</a>
+                        <a href="{{ path('folder_edit', {'id': folder.id}) }}" type="button" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; bottom: 10%; right: 10%; transform: translateX(50%)">Administrer listes</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+#}
 {% endblock %}

@@ -56,7 +56,7 @@ class FolderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="folder_edit", methods={"GET, POST"})
+     * @Route("/{id}/edit", name="folder_edit")
      */
     public function edit(Request $request, Folder $folder): Response
     {
