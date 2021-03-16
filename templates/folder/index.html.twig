@@ -3,53 +3,14 @@
 {% block title %}Norlog{% endblock %}
 
 {% block body %}
-    <h1>Folder index</h1>
+    <h1 style="font-size: 8rem; position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%)">Norlog</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>SKU</th>
-                <th>Designation</th>
-                <th>Size</th>
-                <th>Brand</th>
-                <th>Composition</th>
-                <th>Status</th>
-                <th>Color</th>
-                <th>Type</th>
-                <th>Picture_1</th>
-                <th>Picture_2</th>
-                <th>CreatedAt</th>
-                <th>Exported</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for folder in folders %}
-            <tr>
-                <td>{{ folder.id }}</td>
-                <td>{{ folder.SKU }}</td>
-                <td>{{ folder.designation }}</td>
-                <td>{{ folder.size }}</td>
-                <td>{{ folder.brand }}</td>
-                <td>{{ folder.composition }}</td>
-                <td>{{ folder.status }}</td>
-                <td>{{ folder.color }}</td>
-                <td>{{ folder.type }}</td>
-                <td>{{ folder.picture1 }}</td>
-                <td>{{ folder.picture2 }}</td>
-                <td>{{ folder.createdAt ? folder.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ folder.exported ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('folder_show', {'id': folder.id}) }}">show</a>
-                    <a href="{{ path('folder_edit', {'id': folder.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="14">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="input-group" style="width: 25%; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">
+        <input type="text" name="id" class="form-control" placeholder="Numéro de dossier" style="font-size: 1.5rem;">
+        <button type="submit" class="btn btn-primary" style="font-size: 1.5rem">OK</button>
+    </div>
+
+    <a href="{{ path('folder_list') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 15%; transform: translate(-50%, -50%)">Liste dossiers</a>
+    <a href="{{ path('folder_new') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 50%; transform: translate(-50%, -50%)">Créer un dossier</a>
+    <a href="#" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 85%; transform: translate(-50%, -50%)">Administrer listes</a>
 {% endblock %}

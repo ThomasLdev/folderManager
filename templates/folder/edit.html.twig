@@ -3,11 +3,9 @@
 {% block title %}Edit Folder{% endblock %}
 
 {% block body %}
-    <h1>Edit Folder</h1>
+    <h1 style="font-size: 5rem; position: absolute; top: 5%; left: 50%; transform: translate(-50%, -50%)">Modifier dossier</h1>
 
-    {{ include('folder/_form.html.twig', {'button_label': 'Update'}) }}
+    <a href="{{ path('folder_index') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; left: 10%; transform: translate(-50%, -50%)">Accueil</a>
 
-    <a href="{{ path('folder_index') }}">back to list</a>
-
-    {{ include('folder/_delete_form.html.twig') }}
+    {{ include('folder/_form.html.twig', {'button_label': 'Modifier'}) }}
 {% endblock %}

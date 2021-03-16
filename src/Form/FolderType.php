@@ -22,8 +22,6 @@ class FolderType extends AbstractType
             ->add('type')
             ->add('picture_1')
             ->add('picture_2')
-            ->add('createdAt')
-            ->add('exported')
         ;
     }
 

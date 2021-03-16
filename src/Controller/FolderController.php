@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Folder;
 use App\Form\FolderType;
+use App\Form\IndexType;
 use App\Repository\FolderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,17 +14,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class FolderController extends AbstractController
 {
     /**
-     * @Route("/", name="folder_index", methods={"GET"})
+     * @Route("/", name="folder_index")
      */
-    public function index(FolderRepository $folderRepository): Response
+    public function index(): Response
     {
         return $this->render('folder/index.html.twig', [
-            'folders' => $folderRepository->findAll(),
         ]);
     }
 
     /**
-     * @Route("/new", name="folder_new", methods={"GET, POST"})
+     * @Route("/new", name="folder_new")
      */
     public function new(Request $request): Response
     {
@@ -32,6 +32,9 @@ class FolderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $folder->setCreatedAt(new \DateTime())
+                   ->setExported(false);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($folder);
             $entityManager->flush();
@@ -46,12 +49,12 @@ class FolderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="folder_show", methods={"GET"})
+     * @Route("/folder-list", name="folder_list", methods={"GET"})
      */
-    public function show(Folder $folder): Response
+    public function folderList(FolderRepository $folderRepository): Response
     {
-        return $this->render('folder/show.html.twig', [
-            'folder' => $folder,
+        return $this->render('folder/folder-list.html.twig', [
+            'folders' => $folderRepository->findAll(),
         ]);
     }
 
@@ -64,6 +67,8 @@ class FolderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $folder->setCreatedAt(new \DateTime())
+                   ->setExported(false);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('folder_index');
@@ -76,7 +81,7 @@ class FolderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="folder_delete", methods={"DELETE"})
+     * @Route("/{id}", name="folder_delete")
      */
     public function delete(Request $request, Folder $folder): Response
     {
