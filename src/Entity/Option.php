@@ -19,9 +19,9 @@ class Option
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Folder", inversedBy="options")
      */
-    private $folder_id;
+    private $folder;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -38,14 +38,14 @@ class Option
         return $this->id;
     }
 
-    public function getFolderId(): ?int
+    public function getFolder(): Folder
     {
-        return $this->folder_id;
+        return $this->folder;
     }
 
-    public function setFolderId(int $folder_id): self
+    public function setFolder(int $folder): self
     {
-        $this->folder_id = $folder_id;
+        $this->folder = $folder;
 
         return $this;
     }

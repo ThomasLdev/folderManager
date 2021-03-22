@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Folder;
+use App\Entity\Option;
 use App\Form\FolderType;
-use App\Form\IndexType;
+use App\Form\OptionType;
 use App\Repository\FolderRepository;
+use App\Repository\OptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +30,7 @@ class FolderController extends AbstractController
     public function new(Request $request): Response
     {
         $folder = new Folder();
+
         $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
 
@@ -56,6 +59,17 @@ class FolderController extends AbstractController
         return $this->render('folder/folder-list.html.twig', [
             'folders' => $folderRepository->findAll(),
         ]);
+    }
+
+    /**
+     * @Route("/search-edit", name="search_edit")
+     */
+    public function searchEdit(Request $request): Response
+    {
+        $editId = $request->request->get('id');
+        //check si l'id est bien un nombre => à faire
+        return $this->redirectToRoute('folder_edit', ['id' => (int) $editId]);
+
     }
 
     /**
@@ -92,5 +106,13 @@ class FolderController extends AbstractController
         }
 
         return $this->redirectToRoute('folder_index');
+    }
+
+    /**
+     * @Route("/option-list", name="option_list")
+     */
+    public function optionList(): Response
+    {
+        return $this->render('folder/option-list.html.twig');
     }
 }

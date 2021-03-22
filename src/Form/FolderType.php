@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Folder;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,13 +15,10 @@ class FolderType extends AbstractType
     {
         $builder
             ->add('SKU')
-            ->add('designation')
-            ->add('size')
-            ->add('brand')
-            ->add('composition')
-            ->add('status')
-            ->add('color')
-            ->add('type')
+            ->add('options', CollectionType::class, [
+                'entry_type' => OptionType::class,
+                'entry_options' => ['label' => false]
+            ])
             ->add('picture_1')
             ->add('picture_2')
         ;

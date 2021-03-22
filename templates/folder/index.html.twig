@@ -5,12 +5,14 @@
 {% block body %}
     <h1 style="font-size: 8rem; position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%)">Norlog</h1>
 
-    <div class="input-group" style="width: 25%; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">
-        <input type="text" name="id" class="form-control" placeholder="Numéro de dossier" style="font-size: 1.5rem;">
-        <button type="submit" class="btn btn-primary" style="font-size: 1.5rem">OK</button>
-    </div>
+    <form action="{{ path('search_edit') }}" method="post">
+        <div class="input-group" style="width: 25%; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">
+            <input type="text" name="id" class="form-control" placeholder="Numéro de dossier" style="font-size: 1.5rem;">
+            <button type="submit" class="btn btn-primary" style="font-size: 1.5rem">OK</button>
+        </div>
+    </form>
 
     <a href="{{ path('folder_list') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 15%; transform: translate(-50%, -50%)">Liste dossiers</a>
     <a href="{{ path('folder_new') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 50%; transform: translate(-50%, -50%)">Créer un dossier</a>
-    <a href="#" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 85%; transform: translate(-50%, -50%)">Administrer listes</a>
+    <a href="{{ path('option_list') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 85%; transform: translate(-50%, -50%)">Administrer listes</a>
 {% endblock %}
