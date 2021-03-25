@@ -43,7 +43,7 @@ class Option
         return $this->folder;
     }
 
-    public function setFolder(int $folder): self
+    public function setFolder(Folder $folder): self
     {
         $this->folder = $folder;
 

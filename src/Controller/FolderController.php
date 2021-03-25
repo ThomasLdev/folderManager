@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Controller;
-
 use App\Entity\Folder;
 use App\Entity\Option;
 use App\Form\FolderType;
@@ -12,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 class FolderController extends AbstractController
 {
     /**
@@ -23,7 +20,6 @@ class FolderController extends AbstractController
         return $this->render('folder/index.html.twig', [
         ]);
     }
-
     /**
      * @Route("/new", name="folder_new")
      */
@@ -35,22 +31,62 @@ class FolderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $folder->setCreatedAt(new \DateTime())
-                   ->setExported(false);
+
+            $uploadedFile1 = $form['picture_1']->getData();
+            $uploadedFile2 = $form['picture_2']->getData();
+
+            if ($uploadedFile1) {
+
+                $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+                $originalFilename1 = pathinfo($uploadedFile1->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename1 = $originalFilename1.'-'.uniqid().'.'.$uploadedFile1->guessExtension();
+
+                $uploadedFile1->move(
+                    $destination,
+                    $newFilename1
+                );
+
+                $folder->setPicture1($newFilename1);
+
+            } else {
+
+                $folder->setPicture1("empty");
+
+            }
+            if ($uploadedFile2) {
+
+                $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+                $originalFilename2 = pathinfo($uploadedFile2->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename2 = $originalFilename2.'-'.uniqid().'.'.$uploadedFile2->guessExtension();
+
+                $uploadedFile2->move(
+                    $destination,
+                    $newFilename2
+                );
+
+                $folder->setPicture2($newFilename2);
+
+            } else {
+
+                $folder->setPicture2("empty");
+
+            }
+
+            $folder ->setCreatedAt(new \DateTime())
+                    ->setExported(false);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($folder);
             $entityManager->flush();
 
             return $this->redirectToRoute('folder_index');
-        }
 
+        }
         return $this->render('folder/new.html.twig', [
             'folder' => $folder,
             'form' => $form->createView(),
         ]);
     }
-
     /**
      * @Route("/folder-list", name="folder_list", methods={"GET"})
      */
@@ -60,7 +96,6 @@ class FolderController extends AbstractController
             'folders' => $folderRepository->findAll(),
         ]);
     }
-
     /**
      * @Route("/search-edit", name="search_edit")
      */
@@ -69,9 +104,7 @@ class FolderController extends AbstractController
         $editId = $request->request->get('id');
         //check si l'id est bien un nombre => à faire
         return $this->redirectToRoute('folder_edit', ['id' => (int) $editId]);
-
     }
-
     /**
      * @Route("/{id}/edit", name="folder_edit")
      */
@@ -79,21 +112,43 @@ class FolderController extends AbstractController
     {
         $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile1 = $form['picture_1']->getData();
+            $uploadedFile2 = $form['picture_2']->getData();
+            if ($uploadedFile1) {
+                $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+                $originalFilename1 = pathinfo($uploadedFile1->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename1 = $originalFilename1.'-'.uniqid().'.'.$uploadedFile1->guessExtension();
+                $uploadedFile1->move(
+                    $destination,
+                    $newFilename1
+                );
+                $folder->setPicture1($newFilename1);
+            } else {
+                $folder->setPicture1("empty");
+            }
+            if ($uploadedFile2) {
+                $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+                $originalFilename2 = pathinfo($uploadedFile2->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename2 = $originalFilename2.'-'.uniqid().'.'.$uploadedFile2->guessExtension();
+                $uploadedFile2->move(
+                    $destination,
+                    $newFilename2
+                );
+                $folder->setPicture2($newFilename2);
+            } else {
+                $folder->setPicture2("empty");
+            }
             $folder->setCreatedAt(new \DateTime())
-                   ->setExported(false);
+                ->setExported(false);
             $this->getDoctrine()->getManager()->flush();
-
             return $this->redirectToRoute('folder_index');
         }
-
         return $this->render('folder/edit.html.twig', [
             'folder' => $folder,
             'form' => $form->createView(),
         ]);
     }
-
     /**
      * @Route("/{id}", name="folder_delete")
      */
@@ -104,10 +159,8 @@ class FolderController extends AbstractController
             $entityManager->remove($folder);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('folder_index');
     }
-
     /**
      * @Route("/option-list", name="option_list")
      */

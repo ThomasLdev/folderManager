@@ -19,8 +19,14 @@ class FolderType extends AbstractType
                 'entry_type' => OptionType::class,
                 'entry_options' => ['label' => false]
             ])
-            ->add('picture_1')
-            ->add('picture_2')
+            ->add('picture_1', FileType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('picture_2', FileType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
         ;
     }
 
