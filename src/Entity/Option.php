@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OptionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,11 +21,6 @@ class Option
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Folder", inversedBy="options")
-     */
-    private $folder;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $type;
@@ -33,21 +30,19 @@ class Option
      */
     private $value;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Folder::class, mappedBy="options")
+     */
+    private $folders;
+
+    public function __construct()
+    {
+        $this->folders = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getFolder(): Folder
-    {
-        return $this->folder;
-    }
-
-    public function setFolder(Folder $folder): self
-    {
-        $this->folder = $folder;
-
-        return $this;
     }
 
     public function getType(): ?string
@@ -70,6 +65,33 @@ class Option
     public function setValue(string $value): self
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Folder[]
+     */
+    public function getFolders(): Collection
+    {
+        return $this->folders;
+    }
+
+    public function addFolder(Folder $folder): self
+    {
+        if (!$this->folders->contains($folder)) {
+            $this->folders[] = $folder;
+            $folder->addOption($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFolder(Folder $folder): self
+    {
+        if ($this->folders->removeElement($folder)) {
+            $folder->removeOption($this);
+        }
 
         return $this;
     }

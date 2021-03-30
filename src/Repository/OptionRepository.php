@@ -19,6 +19,32 @@ class OptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Option::class);
     }
 
+    public function findDistinctByType(string $type)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.type = :type')
+            ->setParameter('type', $type)
+            ->groupBy('p.value')
+            ->orderBy('p.type', 'ASC');
+
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
+
+    public function findOneByValueAndType(string $type, string $value)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.type = :type and p.value = :value')
+            ->setParameter('type', $type)
+            ->setParameter('value', $value);
+
+        $query = $qb->getQuery();
+
+        return $query->setMaxResults(1)->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Option[] Returns an array of Option objects
     //  */

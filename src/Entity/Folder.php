@@ -25,11 +25,6 @@ class Folder
     private $SKU;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Option", mappedBy="folder", cascade={"persist"})
-     */
-    private $options;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $picture_1;
@@ -48,6 +43,11 @@ class Folder
      * @ORM\Column(type="boolean")
      */
     private $exported;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Option::class, inversedBy="folders", cascade={"persist"})
+     */
+    private $options;
 
     public function __construct()
     {
@@ -69,11 +69,6 @@ class Folder
         $this->SKU = $SKU;
 
         return $this;
-    }
-
-    public function getOptions(): Collection
-    {
-        return $this->options;
     }
 
     public function getPicture1(): ?string
@@ -120,6 +115,30 @@ class Folder
     public function setExported(bool $exported): self
     {
         $this->exported = $exported;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Option[]
+     */
+    public function getOptions(): Collection
+    {
+        return $this->options;
+    }
+
+    public function addOption(Option $option): self
+    {
+        if (!$this->options->contains($option)) {
+            $this->options[] = $option;
+        }
+
+        return $this;
+    }
+
+    public function removeOption(Option $option): self
+    {
+        $this->options->removeElement($option);
 
         return $this;
     }

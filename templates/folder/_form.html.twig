@@ -1,11 +1,14 @@
 <div class="form-content" style="width: 40%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center">
-    {{ form_start(form) }}
+    {{ form_start(form, {'attr': {'autocomplete': 'off'}}) }}
     {{ form_widget(form.SKU, {'attr': {'class': 'form-control', 'placeholder': 'SKU'}}) }}
     {% for option in form.options %}
-    <div class="input-group" style="margin-top: 3%">
-        {{ form_widget(option, {'attr': {'class': 'form-control'}}) }}
-        <a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-    </div>
+        <h3>{{ option.children.type.vars.value }}</h3>
+        <input id="{{ option.children.type.vars.id }}" type="text" name="{{ option.children.type.vars.full_name }}" value="{{ option.children.type.vars.value }}" style="display: none">
+        <select class="form-select" name="{{ option.children.value.vars.full_name }}" id="{{ option.children.value.vars.id }}">
+            {% for value in options[option.vars.value.type] %}
+                <option value="{{ value.value }}">{{ value.value }}</option>
+            {% endfor %}
+        </select>
     {% endfor %}
     <div class="input-group" style="margin-top: 3%">
         {{ form_widget(form.picture_1, {'attr': {'class': 'form-control', 'placeholder': 'Photo 1'}}) }}
@@ -13,6 +16,7 @@
         {{ form_widget(form.picture_2, {'attr': {'class': 'form-control', 'placeholder': 'Photo 2', 'style': 'border-top-left-radius: .25rem; border-bottom-left-radius: .25rem'}}) }}
         <a href="#" class="btn btn-primary"><i class="fas fa-camera"></i></a>
     </div>
-    <button class="btn btn-primary" style="font-size: 1.5rem; margin-top: 5%">{{ button_label|default('Créer') }}</button>
-    {{ form_end(form) }}
+    <button class="btn btn-primary" type="submit" style="font-size: 1.5rem; margin-top: 5%">{{ button_label|default('Créer') }}</button>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
 </div>

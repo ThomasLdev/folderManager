@@ -27,6 +27,20 @@ class FolderController extends AbstractController
     {
         $folder = new Folder();
 
+        $typeNames = ['designation', 'size', 'brand', 'composition', 'status', 'color', 'type'];
+        $options = [];
+
+        foreach ($typeNames as $typeName)
+        {
+            $values = $this->getDoctrine()->getRepository(Option::class)->findDistinctByType($typeName);
+            array_unshift($values, new Option());
+            $options += [$typeName => $values];
+
+            $option = new Option();
+            $option->setType($typeName);
+            $folder->getOptions()->add($option);
+        }
+
         $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
 
@@ -75,6 +89,15 @@ class FolderController extends AbstractController
             $folder ->setCreatedAt(new \DateTime())
                     ->setExported(false);
 
+            foreach ($folder->getOptions() as $folderOption)
+            {
+                $queryResult = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($folderOption->getType(), $folderOption->getValue());
+                if ($queryResult != null)
+                {
+                    $folder->getOptions()->removeElement($folderOption);
+                    $folder->getOptions()->add($queryResult);
+                }
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($folder);
             $entityManager->flush();
@@ -84,6 +107,7 @@ class FolderController extends AbstractController
         }
         return $this->render('folder/new.html.twig', [
             'folder' => $folder,
+            'options' => $options,
             'form' => $form->createView(),
         ]);
     }
@@ -110,42 +134,114 @@ class FolderController extends AbstractController
      */
     public function edit(Request $request, Folder $folder): Response
     {
+        $typeNames = ['designation', 'size', 'brand', 'composition', 'status', 'color', 'type'];
+        $optionsString = [];
+        $tmpOptions = [];
+
+        foreach ($typeNames as $typeName)
+        {
+            $values = $this->getDoctrine()->getRepository(Option::class)->findDistinctByType($typeName);
+
+            $shiftedOption = new Option();
+
+            foreach ($folder->getOptions() as $folderOption)
+            {
+                if ($folderOption->getType() === $typeName)
+                {
+                    $shiftedOption = $folderOption;
+                }
+            }
+
+            array_unshift($values, new Option());
+
+            if ($shiftedOption->getValue())
+            {
+                unset($values[array_search($shiftedOption, $values)]);
+                array_unshift($values, $shiftedOption);
+            }
+
+            $optionsString += [$typeName => $values];
+
+            $option = new Option();
+            $option->setType($typeName);
+            $tmpOptions[] = $option;
+
+        }
+
+        $folder->getOptions()->clear();
+
+        foreach ($tmpOptions as $option)
+        {
+            $folder->getOptions()->add($option);
+        }
+
         $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+
             $uploadedFile1 = $form['picture_1']->getData();
             $uploadedFile2 = $form['picture_2']->getData();
+
             if ($uploadedFile1) {
+
                 $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
                 $originalFilename1 = pathinfo($uploadedFile1->getClientOriginalName(), PATHINFO_FILENAME);
                 $newFilename1 = $originalFilename1.'-'.uniqid().'.'.$uploadedFile1->guessExtension();
+
                 $uploadedFile1->move(
                     $destination,
                     $newFilename1
                 );
+
                 $folder->setPicture1($newFilename1);
+
             } else {
+
                 $folder->setPicture1("empty");
+
             }
             if ($uploadedFile2) {
+
                 $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
                 $originalFilename2 = pathinfo($uploadedFile2->getClientOriginalName(), PATHINFO_FILENAME);
                 $newFilename2 = $originalFilename2.'-'.uniqid().'.'.$uploadedFile2->guessExtension();
+
                 $uploadedFile2->move(
                     $destination,
                     $newFilename2
                 );
+
                 $folder->setPicture2($newFilename2);
+
             } else {
+
                 $folder->setPicture2("empty");
+
             }
-            $folder->setCreatedAt(new \DateTime())
+
+            $folder ->setCreatedAt(new \DateTime())
                 ->setExported(false);
-            $this->getDoctrine()->getManager()->flush();
+
+            $entityManager = $this->getDoctrine()->getManager();
+            foreach ($folder->getOptions() as $folderOption)
+            {
+                $persistedOption = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($folderOption->getType(), $folderOption->getValue());
+                if ($persistedOption){
+                    $folder->getOptions()->removeElement($folderOption);
+                    $folder->getOptions()->add($persistedOption);
+                }
+            }
+
+            $entityManager->persist($folder);
+            $entityManager->flush();
+
             return $this->redirectToRoute('folder_index');
+
         }
         return $this->render('folder/edit.html.twig', [
             'folder' => $folder,
+            'options' => $optionsString,
             'form' => $form->createView(),
         ]);
     }
