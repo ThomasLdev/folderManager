@@ -17,7 +17,8 @@ class FolderType extends AbstractType
             ->add('SKU')
             ->add('options', CollectionType::class, [
                 'entry_type' => OptionType::class,
-                'entry_options' => ['label' => false]
+                'entry_options' => ['label' => false],
+                'allow_add' => true
             ])
             ->add('picture_1', FileType::class, [
                 'mapped' => false,

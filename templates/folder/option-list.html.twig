@@ -7,4 +7,16 @@
 
     <a href="{{ path('folder_index') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; left: 10%; transform: translate(-50%, -50%)">Accueil</a>
 
+    <div class="form-content" style="width: 30%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center">
+        {{ form_start(form, {'attr': {'autocomplete': 'off'}}) }}
+            <select class="form-select" name="{{ form.children.type.vars.full_name }}" id="{{ form.children.type.vars.id }}">
+                {% for typeName in types %}
+                    <option value="{{ typeName }}">{{ typeName }}</option>
+                {% endfor %}
+            </select>
+            {{ form_widget(form.value, {'attr': {'class': 'form-control', 'style': 'margin-top: 3%'}}) }}
+        <button class="btn btn-primary" type="submit" style="font-size: 1.5rem; margin-top: 5%">{{ button_label|default('Créer') }}</button>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
 {% endblock %}

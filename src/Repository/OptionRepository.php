@@ -22,8 +22,9 @@ class OptionRepository extends ServiceEntityRepository
     public function findDistinctByType(string $type)
     {
         $qb = $this->createQueryBuilder('p')
-            ->where('p.type = :type')
+            ->where('p.type = :type and p.value != :null')
             ->setParameter('type', $type)
+            ->setParameter('null', '')
             ->groupBy('p.value')
             ->orderBy('p.type', 'ASC');
 
@@ -33,7 +34,7 @@ class OptionRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function findOneByValueAndType(string $type, string $value)
+    public function findOneByValueAndType(string $type, $value)
     {
         $qb = $this->createQueryBuilder('p')
             ->where('p.type = :type and p.value = :value')

@@ -5,11 +5,11 @@ use App\Entity\Option;
 use App\Form\FolderType;
 use App\Form\OptionType;
 use App\Repository\FolderRepository;
-use App\Repository\OptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 class FolderController extends AbstractController
 {
     /**
@@ -91,6 +91,9 @@ class FolderController extends AbstractController
 
             foreach ($folder->getOptions() as $folderOption)
             {
+                if ($folderOption->getValue() === null){
+                    $folderOption->setValue('');
+                }
                 $queryResult = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($folderOption->getType(), $folderOption->getValue());
                 if ($queryResult != null)
                 {
@@ -226,6 +229,9 @@ class FolderController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($folder->getOptions() as $folderOption)
             {
+                if ($folderOption->getValue() === null){
+                    $folderOption->setValue('');
+                }
                 $persistedOption = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($folderOption->getType(), $folderOption->getValue());
                 if ($persistedOption){
                     $folder->getOptions()->removeElement($folderOption);
@@ -245,6 +251,41 @@ class FolderController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/option-list", name="option_list")
+     */
+    public function optionList(Request $request): Response
+    {
+        $typeNames = ['designation', 'size', 'brand', 'composition', 'status', 'color', 'type'];
+
+        $option = new Option();
+
+        $form = $this->createForm(OptionType::class, $option);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($option);
+            $entityManager->flush();
+        }
+
+        return $this->render('folder/option-list.html.twig', [
+            'types' => $typeNames,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/folder-export/{id}", name="folder_export", , methods={"GET"})
+     */
+    public function folderExport(Request $request, Folder $folder): Response
+    {
+
+    }
+
     /**
      * @Route("/{id}", name="folder_delete")
      */
@@ -256,12 +297,5 @@ class FolderController extends AbstractController
             $entityManager->flush();
         }
         return $this->redirectToRoute('folder_index');
-    }
-    /**
-     * @Route("/option-list", name="option_list")
-     */
-    public function optionList(): Response
-    {
-        return $this->render('folder/option-list.html.twig');
     }
 }
