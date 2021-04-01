@@ -1,4 +1,24 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="form-content" style="width: 40%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: left">
+    {{ form_start(form, {'attr': {'autocomplete': 'off'}}) }}
+    <label for="SKU">SKU</label>
+    {{ form_widget(form.SKU, {'attr': {'id': 'SKU', 'class': 'form-control', 'style': 'margin-bottom: 2%'}}) }}
+
+    {% for option in form.options %}
+        <input id="{{ option.children.type.vars.id }}" type="text" name="{{ option.children.type.vars.full_name }}" value="{{ option.children.type.vars.value }}" style="display: none">
+        <label for="{{ option.children.type.vars.id }}">{{ option.children.type.vars.value }}</label>
+        <select class="form-select" name="{{ option.children.value.vars.full_name }}" id="{{ option.children.value.vars.id }}" style="margin-bottom: 2%">
+            {% for value in options[option.vars.value.type] %}
+                <option value="{{ value.value }}">{{ value.value }}</option>
+            {% endfor %}
+        </select>
+    {% endfor %}
+    <div class="input-group" style="margin-top: 3%">
+        {{ form_widget(form.picture_1, {'attr': {'id': 'picture-1', 'class': 'form-control', 'placeholder': 'Photo 1'}}) }}
+        <button class="btn btn-primary" style="margin-right: 15px; border-top-right-radius: .25rem; border-bottom-right-radius: .25rem"><i class="fas fa-camera"></i></button>
+        {{ form_widget(form.picture_2, {'attr': {'id': 'picture-2', 'class': 'form-control', 'placeholder': 'Photo 2', 'style': 'border-top-left-radius: .25rem; border-bottom-left-radius: .25rem'}}) }}
+        <button class="btn btn-primary"><i class="fas fa-camera"></i></button>
+    </div>
+    <button class="btn btn-primary" type="submit" style="font-size: 1.5rem; margin-top: 5%; position: absolute; left: 50%; transform: translateX(-50%)">{{ button_label|default('Créer') }}</button>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+</div>

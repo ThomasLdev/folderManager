@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FolderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,41 +27,6 @@ class Folder
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $designation;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $size;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $brand;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $composition;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $status;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $color;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $type;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $picture_1;
 
     /**
@@ -77,6 +44,16 @@ class Folder
      */
     private $exported;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Option::class, inversedBy="folders", cascade={"persist"})
+     */
+    private $options;
+
+    public function __construct()
+    {
+        $this->options = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,90 +67,6 @@ class Folder
     public function setSKU(string $SKU): self
     {
         $this->SKU = $SKU;
-
-        return $this;
-    }
-
-    public function getDesignation(): ?string
-    {
-        return $this->designation;
-    }
-
-    public function setDesignation(string $designation): self
-    {
-        $this->designation = $designation;
-
-        return $this;
-    }
-
-    public function getSize(): ?string
-    {
-        return $this->size;
-    }
-
-    public function setSize(string $size): self
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
-    public function getBrand(): ?string
-    {
-        return $this->brand;
-    }
-
-    public function setBrand(string $brand): self
-    {
-        $this->brand = $brand;
-
-        return $this;
-    }
-
-    public function getComposition(): ?string
-    {
-        return $this->composition;
-    }
-
-    public function setComposition(string $composition): self
-    {
-        $this->composition = $composition;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getColor(): ?string
-    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): self
-    {
-        $this->color = $color;
-
-        return $this;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
 
         return $this;
     }
@@ -222,6 +115,30 @@ class Folder
     public function setExported(bool $exported): self
     {
         $this->exported = $exported;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Option[]
+     */
+    public function getOptions(): Collection
+    {
+        return $this->options;
+    }
+
+    public function addOption(Option $option): self
+    {
+        if (!$this->options->contains($option)) {
+            $this->options[] = $option;
+        }
+
+        return $this;
+    }
+
+    public function removeOption(Option $option): self
+    {
+        $this->options->removeElement($option);
 
         return $this;
     }
