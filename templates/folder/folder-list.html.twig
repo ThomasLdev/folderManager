@@ -9,34 +9,37 @@
         <h1 style="font-size: 5rem">Liste dossiers</h1>
         <a href="{{ path('folder_index') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; left: 10%; transform: translate(-50%, -50%)">Accueil</a>
 
-        <table class="table table-striped" style="width: 75%; text-align: center; border: 1px solid #000000; margin-top: 2%">
-            <thead>
-            <tr>
-                <th>Sélectionner</th>
-                <th>Numéro de dossier</th>
-                <th>Exporté</th>
-                <th>Date de création</th>
-                <th>Modifier</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for folder in folders %}
+        <form action="{{ path('folder_export') }}" method="post" style="width: 75%; text-align: center;  margin-top: 2%">
+            <table class="table table-striped" style="border: 1px solid #000000;">
+                <thead>
                 <tr>
-                    <td> <input class="form-check-input" type="checkbox"></td>
-                    <td>{{ folder.id }}</td>
-                    <td>{{ folder.exported ? 'Yes' : 'No' }}</td>
-                    <td>{{ folder.createdAt ? folder.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>
-                        <a href="{{ path('folder_edit', {'id': folder.id}) }}"><i class="fas fa-edit"></i></a>
-                    </td>
+                    <th>Sélectionner</th>
+                    <th>Numéro de dossier</th>
+                    <th>Exporté</th>
+                    <th>Date de création</th>
+                    <th>Modifier</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="14">no records found</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for folder in folders %}
+                    <tr>
+                        <td> <input class="form-check-input" type="checkbox" value="{{ folder.id }}" name="{{ "folder_" ~ folder.id }}"></td>
+                        <td>{{ folder.id }}</td>
+                        <td>{{ folder.exported ? 'Yes' : 'No' }}</td>
+                        <td>{{ folder.createdAt ? folder.createdAt|date('Y-m-d') : '' }}</td>
+                        <td>
+                            <a href="{{ path('folder_edit', {'id': folder.id}) }}"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="14">Pas de dossier existant</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button class="btn btn-primary" type="submit">Exporter</button>
+        </form>
     </div>
 
 {% endblock %}

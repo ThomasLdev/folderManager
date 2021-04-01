@@ -5,6 +5,7 @@ use App\Entity\Option;
 use App\Form\FolderType;
 use App\Form\OptionType;
 use App\Repository\FolderRepository;
+use App\Repository\OptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,7 @@ class FolderController extends AbstractController
     public function index(): Response
     {
         return $this->render('folder/index.html.twig', [
+            'error' => false
         ]);
     }
     /**
@@ -27,7 +29,7 @@ class FolderController extends AbstractController
     {
         $folder = new Folder();
 
-        $typeNames = ['designation', 'size', 'brand', 'composition', 'status', 'color', 'type'];
+        $typeNames = ['Designation', 'Taille', 'Marque', 'Composition', 'Etat', 'Couleur', 'Type'];
         $options = [];
 
         foreach ($typeNames as $typeName)
@@ -129,15 +131,31 @@ class FolderController extends AbstractController
     public function searchEdit(Request $request): Response
     {
         $editId = $request->request->get('id');
-        //check si l'id est bien un nombre => à faire
-        return $this->redirectToRoute('folder_edit', ['id' => (int) $editId]);
+
+        //check si l'id est bien un nombre
+        if (is_numeric($editId)){
+            return $this->redirectToRoute('folder_edit', ['id' => (int) $editId]);
+        }
+        else
+        {
+            return $this->render('folder/index.html.twig', [
+                'error' => 'Veuillez entrer un nombre'
+            ]);
+        }
     }
     /**
      * @Route("/{id}/edit", name="folder_edit")
      */
-    public function edit(Request $request, Folder $folder): Response
+    public function edit(Request $request, Folder $folder = null): Response
     {
-        $typeNames = ['designation', 'size', 'brand', 'composition', 'status', 'color', 'type'];
+        if ($folder == null)
+        {
+            return $this->render('folder/index.html.twig', [
+                'error' => 'Veuillez entrer un numéro de dossier existant'
+            ]);
+        }
+
+        $typeNames = ['Designation', 'Taille', 'Marque', 'Composition', 'Etat', 'Couleur', 'Type'];
         $optionsString = [];
         $tmpOptions = [];
 
@@ -255,9 +273,9 @@ class FolderController extends AbstractController
     /**
      * @Route("/option-list", name="option_list")
      */
-    public function optionList(Request $request): Response
+    public function optionList(Request $request, OptionRepository $optionRepository): Response
     {
-        $typeNames = ['designation', 'size', 'brand', 'composition', 'status', 'color', 'type'];
+        $typeNames = ['Designation', 'Taille', 'Marque', 'Composition', 'Etat', 'Couleur', 'Type'];
 
         $option = new Option();
 
@@ -274,22 +292,57 @@ class FolderController extends AbstractController
 
         return $this->render('folder/option-list.html.twig', [
             'types' => $typeNames,
+            'options' => $optionRepository->findAll(),
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/folder-export/{id}", name="folder_export", , methods={"GET"})
+     * @Route("/folder-export/", name="folder_export", methods={"POST"})
      */
-    public function folderExport(Request $request, Folder $folder): Response
+    public function folderExport(Request $request): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
 
+        $folderIds = $request->request->all();
+
+        $folderRows = ['ID;SKU;Photo_1;Photo_2;Date;Marque;Couleur;Composition;Designation;Taille;Etat;Type'];
+
+        foreach ($folderIds as $folderId)
+        {
+            $folder = $this->getDoctrine()->getRepository(Folder::class)->find($folderId);
+            $folderEntry = [
+                $folder->getId(),
+                $folder->getSKU(),
+                ($folder->getPicture1() == 'empty') ? 'empty' : 'https://' . $request->getHost().'/uploads/'.$folder->getPicture1(),
+                ($folder->getPicture2() == 'empty') ? 'empty' : 'https://' . $request->getHost().'/uploads/'.$folder->getPicture2(),
+                $folder->getCreatedAt()->format('Y-m-d'),
+            ];
+            $options = $folder->getOptions()->toArray();
+            usort($options, function ($a, $b) { return strcasecmp($a->getType(), $b->getType()); });
+
+            foreach ($options as $option)
+            {
+                array_push($folderEntry, ($option->getValue() != '') ? $option->getValue() : 'none');
+            }
+            $folderRows[] = implode(';', $folderEntry);
+            $folder->setExported(true);
+
+            $entityManager->persist($folder);
+        }
+        $entityManager->flush();
+
+        $folderCSV = implode("\n", $folderRows);
+        $response = new Response($folderCSV);
+        $response->headers->set('Content-Type', 'text/csv');
+
+        return $response;
     }
 
     /**
-     * @Route("/{id}", name="folder_delete")
+     * @Route("folder-delete/{id}", name="folder_delete")
      */
-    public function delete(Request $request, Folder $folder): Response
+    public function folderDelete(Request $request, Folder $folder): Response
     {
         if ($this->isCsrfTokenValid('delete'.$folder->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -297,5 +350,17 @@ class FolderController extends AbstractController
             $entityManager->flush();
         }
         return $this->redirectToRoute('folder_index');
+    }
+
+    /**
+     * @Route("option-delete/{id}", name="option_delete")
+     */
+    public function optionDelete(Request $request, Option $option): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($option);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('option_list');
     }
 }
