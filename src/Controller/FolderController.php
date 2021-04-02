@@ -18,7 +18,7 @@ class FolderController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('folder/index.html.twig', [
+          return $this->render('folder/index.html.twig', [
             'error' => false
         ]);
     }
