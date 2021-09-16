@@ -22,7 +22,8 @@ class FolderType extends AbstractType
             ])
             ->add('picture_1', FileType::class, [
                 'mapped' => false,
-                'required' => false
+                'required' => false,
+                'attr' => ['accept' => 'image/*']
             ])
             ->add('picture_2', FileType::class, [
                 'mapped' => false,
