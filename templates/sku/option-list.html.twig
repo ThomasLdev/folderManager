@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Folder{% endblock %}
+{% block title %}Sku{% endblock %}
 
 {% block body %}
 <div class="content" style="display: flex; flex-direction: column; align-items: center">
 
     <h1 style="font-size: 5rem">Administrer listes</h1>
-    <a href="{{ path('folder_index') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; left: 10%; transform: translate(-50%, -50%)">Accueil</a>
+    <a href="{{ path('sku_index') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; left: 10%; transform: translate(-50%, -50%)">Accueil</a>
 
     <div class="form-content" style="width: 30%; text-align: center; margin-top: 2%">
         {{ form_start(form, {'attr': {'autocomplete': 'off'}}) }}

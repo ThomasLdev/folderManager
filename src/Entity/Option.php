@@ -31,13 +31,13 @@ class Option
     private $value;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Folder::class, mappedBy="options")
+     * @ORM\ManyToMany(targetEntity=Sku::class, mappedBy="options")
      */
-    private $folders;
+    private $sku;
 
     public function __construct()
     {
-        $this->folders = new ArrayCollection();
+        $this->sku = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,27 +70,27 @@ class Option
     }
 
     /**
-     * @return Collection|Folder[]
+     * @return Collection|Sku[]
      */
-    public function getFolders(): Collection
+    public function getSku(): Collection
     {
-        return $this->folders;
+        return $this->sku;
     }
 
-    public function addFolder(Folder $folder): self
+    public function addSku(Sku $sku): self
     {
-        if (!$this->folders->contains($folder)) {
-            $this->folders[] = $folder;
-            $folder->addOption($this);
+        if (!$this->sku->contains($sku)) {
+            $this->sku[] = $sku;
+            $sku->addOption($this);
         }
 
         return $this;
     }
 
-    public function removeFolder(Folder $folder): self
+    public function removeFolder(Sku $sku): self
     {
-        if ($this->folders->removeElement($folder)) {
-            $folder->removeOption($this);
+        if ($this->sku->removeElement($sku)) {
+            $sku->removeOption($this);
         }
 
         return $this;
