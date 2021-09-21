@@ -2,34 +2,34 @@
 
 namespace App\Controller;
 
-use App\Entity\Folder;
+use App\Entity\Sku;
 use App\Entity\Option;
-use App\Form\FolderType;
+use App\Form\SkuType;
 use App\Form\OptionType;
-use App\Repository\FolderRepository;
+use App\Repository\SkuRepository;
 use App\Repository\OptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FolderController extends AbstractController
+class SkuController extends AbstractController
 {
     /**
-     * @Route("/", name="folder_index")
+     * @Route("/", name="sku_index")
      */
     public function index(): Response
     {
-          return $this->render('folder/index.html.twig', [
+        return $this->render('sku/index.html.twig', [
             'error' => false
         ]);
     }
     /**
-     * @Route("/new", name="folder_new")
+     * @Route("/new", name="sku_new")
      */
     public function new(Request $request): Response
     {
-        $folder = new Folder();
+        $Sku = new Sku();
 
         $typeNames = ['Designation', 'Taille', 'Marque', 'Composition', 'Etat', 'Couleur', 'Type'];
         $options = [];
@@ -42,10 +42,10 @@ class FolderController extends AbstractController
 
             $option = new Option();
             $option->setType($typeName);
-            $folder->getOptions()->add($option);
+            $Sku->getOptions()->add($option);
         }
 
-        $form = $this->createForm(FolderType::class, $folder);
+        $form = $this->createForm(SkuType::class, $Sku);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -64,11 +64,11 @@ class FolderController extends AbstractController
                     $newFilename1
                 );
 
-                $folder->setPicture1($newFilename1);
+                $Sku->setPicture1($newFilename1);
 
             } else {
 
-                $folder->setPicture1("empty");
+                $Sku->setPicture1("empty");
 
             }
             if ($uploadedFile2) {
@@ -82,49 +82,49 @@ class FolderController extends AbstractController
                     $newFilename2
                 );
 
-                $folder->setPicture2($newFilename2);
+                $Sku->setPicture2($newFilename2);
 
             } else {
 
-                $folder->setPicture2("empty");
+                $Sku->setPicture2("empty");
 
             }
 
-            $folder ->setCreatedAt(new \DateTime())
-                    ->setExported(false);
+            $Sku ->setCreatedAt(new \DateTime())
+                ->setExported(false);
 
-            foreach ($folder->getOptions() as $folderOption)
+            foreach ($Sku->getOptions() as $SkuOption)
             {
-                if ($folderOption->getValue() === null){
-                    $folderOption->setValue('');
+                if ($SkuOption->getValue() === null){
+                    $SkuOption->setValue('');
                 }
-                $queryResult = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($folderOption->getType(), $folderOption->getValue());
+                $queryResult = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($SkuOption->getType(), $SkuOption->getValue());
                 if ($queryResult != null)
                 {
-                    $folder->getOptions()->removeElement($folderOption);
-                    $folder->getOptions()->add($queryResult);
+                    $Sku->getOptions()->removeElement($SkuOption);
+                    $Sku->getOptions()->add($queryResult);
                 }
             }
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($folder);
+            $entityManager->persist($Sku);
             $entityManager->flush();
 
-            return $this->redirectToRoute('folder_index');
+            return $this->redirectToRoute('sku_index');
 
         }
-        return $this->render('folder/new.html.twig', [
-            'folder' => $folder,
+        return $this->render('sku/new.html.twig', [
+            'sku' => $Sku,
             'options' => $options,
             'form' => $form->createView(),
         ]);
     }
     /**
-     * @Route("/folder-list", name="folder_list", methods={"GET"})
+     * @Route("/sku-list", name="sku_list", methods={"GET"})
      */
-    public function folderList(FolderRepository $folderRepository): Response
+    public function SkuList(SkuRepository $SkuRepository): Response
     {
-        return $this->render('folder/folder-list.html.twig', [
-            'folders' => $folderRepository->findAll(),
+        return $this->render('sku/sku-list.html.twig', [
+            'skus' => $SkuRepository->findAll(),
         ]);
     }
     /**
@@ -136,23 +136,23 @@ class FolderController extends AbstractController
 
         //check si l'id est bien un nombre
         if (is_numeric($editId)){
-            return $this->redirectToRoute('folder_edit', ['id' => (int) $editId]);
+            return $this->redirectToRoute('sku_edit', ['id' => (int) $editId]);
         }
         else
         {
-            return $this->render('folder/index.html.twig', [
+            return $this->render('sku/index.html.twig', [
                 'error' => 'Veuillez entrer un nombre'
             ]);
         }
     }
     /**
-     * @Route("/{id}/edit", name="folder_edit")
+     * @Route("/{id}/edit", name="sku_edit")
      */
-    public function edit(Request $request, Folder $folder = null): Response
+    public function edit(Request $request, Sku $Sku = null): Response
     {
-        if ($folder == null)
+        if ($Sku == null)
         {
-            return $this->render('folder/index.html.twig', [
+            return $this->render('sku/index.html.twig', [
                 'error' => 'Veuillez entrer un numéro de dossier existant'
             ]);
         }
@@ -167,11 +167,11 @@ class FolderController extends AbstractController
 
             $shiftedOption = new Option();
 
-            foreach ($folder->getOptions() as $folderOption)
+            foreach ($Sku->getOptions() as $SkuOption)
             {
-                if ($folderOption->getType() === $typeName)
+                if ($SkuOption->getType() === $typeName)
                 {
-                    $shiftedOption = $folderOption;
+                    $shiftedOption = $SkuOption;
                 }
             }
 
@@ -188,17 +188,16 @@ class FolderController extends AbstractController
             $option = new Option();
             $option->setType($typeName);
             $tmpOptions[] = $option;
-
         }
 
-        $folder->getOptions()->clear();
+        $Sku->getOptions()->clear();
 
         foreach ($tmpOptions as $option)
         {
-            $folder->getOptions()->add($option);
+            $Sku->getOptions()->add($option);
         }
 
-        $form = $this->createForm(FolderType::class, $folder);
+        $form = $this->createForm(SkuType::class, $Sku);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -217,11 +216,11 @@ class FolderController extends AbstractController
                     $newFilename1
                 );
 
-                $folder->setPicture1($newFilename1);
+                $Sku->setPicture1($newFilename1);
 
             } else {
 
-                $folder->setPicture1("empty");
+                $Sku->setPicture1("empty");
 
             }
             if ($uploadedFile2) {
@@ -235,38 +234,38 @@ class FolderController extends AbstractController
                     $newFilename2
                 );
 
-                $folder->setPicture2($newFilename2);
+                $Sku->setPicture2($newFilename2);
 
             } else {
 
-                $folder->setPicture2("empty");
+                $Sku->setPicture2("empty");
 
             }
 
-            $folder ->setCreatedAt(new \DateTime())
+            $Sku ->setCreatedAt(new \DateTime())
                 ->setExported(false);
 
             $entityManager = $this->getDoctrine()->getManager();
-            foreach ($folder->getOptions() as $folderOption)
+            foreach ($Sku->getOptions() as $SkuOption)
             {
-                if ($folderOption->getValue() === null){
-                    $folderOption->setValue('');
+                if ($SkuOption->getValue() === null){
+                    $SkuOption->setValue('');
                 }
-                $persistedOption = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($folderOption->getType(), $folderOption->getValue());
+                $persistedOption = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($SkuOption->getType(), $SkuOption->getValue());
                 if ($persistedOption){
-                    $folder->getOptions()->removeElement($folderOption);
-                    $folder->getOptions()->add($persistedOption);
+                    $Sku->getOptions()->removeElement($SkuOption);
+                    $Sku->getOptions()->add($persistedOption);
                 }
             }
 
-            $entityManager->persist($folder);
+            $entityManager->persist($Sku);
             $entityManager->flush();
 
-            return $this->redirectToRoute('folder_index');
+            return $this->redirectToRoute('sku_index');
 
         }
-        return $this->render('folder/edit.html.twig', [
-            'folder' => $folder,
+        return $this->render('sku/edit.html.twig', [
+            'sku' => $Sku,
             'options' => $optionsString,
             'form' => $form->createView(),
         ]);
@@ -292,7 +291,7 @@ class FolderController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->render('folder/option-list.html.twig', [
+        return $this->render('sku/option-list.html.twig', [
             'types' => $typeNames,
             'options' => $optionRepository->findAll(),
             'form' => $form->createView(),
@@ -300,58 +299,58 @@ class FolderController extends AbstractController
     }
 
     /**
-     * @Route("/folder-export/", name="folder_export", methods={"POST"})
+     * @Route("/sku-export/", name="sku_export", methods={"POST"})
      */
-    public function folderExport(Request $request): Response
+    public function SkuExport(Request $request): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        $folderIds = $request->request->all();
+        $SkuIds = $request->request->all();
 
-        $folderRows = ['ID;SKU;Photo_1;Photo_2;Date;Marque;Couleur;Composition;Designation;Taille;Etat;Type'];
+        $SkuRows = ['ID;SKU;Photo_1;Photo_2;Date;Marque;Couleur;Composition;Designation;Taille;Etat;Type'];
 
-        foreach ($folderIds as $folderId)
+        foreach ($SkuIds as $SkuId)
         {
-            $folder = $this->getDoctrine()->getRepository(Folder::class)->find($folderId);
-            $folderEntry = [
-                $folder->getId(),
-                $folder->getSKU(),
-                ($folder->getPicture1() == 'empty') ? 'empty' : 'https://' . $request->getHost().'/uploads/'.$folder->getPicture1(),
-                ($folder->getPicture2() == 'empty') ? 'empty' : 'https://' . $request->getHost().'/uploads/'.$folder->getPicture2(),
-                $folder->getCreatedAt()->format('Y-m-d'),
+            $Sku = $this->getDoctrine()->getRepository(Sku::class)->find($SkuId);
+            $SkuEntry = [
+                $Sku->getId(),
+                $Sku->getSKU(),
+                ($Sku->getPicture1() == 'empty') ? 'empty' : 'https://' . $request->getHost().'/uploads/'.$Sku->getPicture1(),
+                ($Sku->getPicture2() == 'empty') ? 'empty' : 'https://' . $request->getHost().'/uploads/'.$Sku->getPicture2(),
+                $Sku->getCreatedAt()->format('Y-m-d'),
             ];
-            $options = $folder->getOptions()->toArray();
+            $options = $Sku->getOptions()->toArray();
             usort($options, function ($a, $b) { return strcasecmp($a->getType(), $b->getType()); });
 
             foreach ($options as $option)
             {
-                array_push($folderEntry, ($option->getValue() != '') ? $option->getValue() : 'none');
+                array_push($SkuEntry, ($option->getValue() != '') ? $option->getValue() : 'none');
             }
-            $folderRows[] = implode(';', $folderEntry);
-            $folder->setExported(true);
+            $SkuRows[] = implode(';', $SkuEntry);
+            $Sku->setExported(true);
 
-            $entityManager->persist($folder);
+            $entityManager->persist($Sku);
         }
         $entityManager->flush();
 
-        $folderCSV = implode("\n", $folderRows);
-        $response = new Response($folderCSV);
+        $SkuCSV = implode("\n", $SkuRows);
+        $response = new Response($SkuCSV);
         $response->headers->set('Content-Type', 'text/csv');
 
         return $response;
     }
 
     /**
-     * @Route("folder-delete/{id}", name="folder_delete")
+     * @Route("sku-delete/{id}", name="sku_delete")
      */
-    public function folderDelete(Request $request, Folder $folder): Response
+    public function SkuDelete(Request $request, Sku $Sku): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$folder->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$Sku->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($folder);
+            $entityManager->remove($Sku);
             $entityManager->flush();
         }
-        return $this->redirectToRoute('folder_index');
+        return $this->redirectToRoute('sku_index');
     }
 
     /**

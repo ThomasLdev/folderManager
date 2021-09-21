@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\FolderRepository;
+use App\Repository\SkuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=FolderRepository::class)
+ * @ORM\Entity(repositoryClass=SkuRepository::class)
  */
-class Folder
+class Sku
 {
     /**
      * @ORM\Id
@@ -45,7 +45,7 @@ class Folder
     private $exported;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Option::class, inversedBy="folders", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity=Option::class, inversedBy="skus", cascade={"persist"})
      */
     private $options;
 
