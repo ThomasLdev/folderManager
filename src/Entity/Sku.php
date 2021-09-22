@@ -27,12 +27,6 @@ class Sku
     private $SKU;
 
     /**
-     * @ORM\ManyToMany(targetEntity=NorlogFolder::class, inversedBy="skus", cascade={"persist"})
-     * @ORM\JoinTable(name="skus_folders")
-     */
-    private $folders;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $picture_1;
@@ -57,26 +51,15 @@ class Sku
      */
     private $options;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=NorlogFolder::class, inversedBy="skus")
+     */
+    private $folder;
+
     public function __construct()
     {
         $this->options = new ArrayCollection();
         $this->folders = new ArrayCollection();
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getFolders(): ArrayCollection
-    {
-        return $this->folders;
-    }
-
-    /**
-     * @param NorlogFolder $folder
-     */
-    public function addFolder(NorlogFolder $folder): void
-    {
-        $folder->addSku($this);
     }
 
     public function getId(): ?int
@@ -166,5 +149,21 @@ class Sku
         $this->options->removeElement($option);
 
         return $this;
+    }
+
+    public function getFolder(): ?NorlogFolder
+    {
+        return $this->folder;
+    }
+
+    public function setFolder(?NorlogFolder $folder): self
+    {
+        $this->folder = $folder;
+
+        return $this;
+    }
+    public function __toString()
+    {
+        return $this->getSKU();
     }
 }

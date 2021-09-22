@@ -6,6 +6,7 @@ use App\Repository\NorlogFolderRepository;
 use App\Entity\Sku;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,8 +17,8 @@ class NorlogFolder
 {
     public function __construct()
     {
-        $this->skus = new ArrayCollection();
         $this->createdAt = new DateTime();
+        $this->skus = new ArrayCollection();
     }
 
     /**
@@ -28,13 +29,8 @@ class NorlogFolder
     private $id;
 
     /**
-     * Many Folders can have Many Skus
-     * @ORM\ManyToMany(targetEntity=Sku::class, mappedBy="folders")
-     */
-    private $sku;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * Special ID set by Norlog for each folder
      */
     private ?string $norlogReference;
 
@@ -48,34 +44,14 @@ class NorlogFolder
      */
     private ?DateTime $updatedAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Sku::class, mappedBy="folder", cascade={"persist"})
+     */
+    private $skus;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getSkus(): ArrayCollection
-    {
-        return $this->skus;
-    }
-
-    /**
-     * @param Sku $sku
-     */
-    public function addSku(Sku $sku): void
-    {
-        if (!$this->skus->contains($sku)) {
-            $this->skus[] = $sku;
-        }
-    }
-
-    public function removeSku(Sku $sku): self
-    {
-        $this->skus->removeElement($sku);
-
-        return $this;
     }
 
     public function getNorlogReference(): ?string
@@ -90,26 +66,56 @@ class NorlogFolder
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sku[]
+     */
+    public function getSkus(): Collection
+    {
+        return $this->skus;
+    }
+
+    public function addSku(Sku $sku): self
+    {
+        if (!$this->skus->contains($sku)) {
+            $this->skus[] = $sku;
+            $sku->setFolder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSku(Sku $sku): self
+    {
+        if ($this->skus->removeElement($sku)) {
+            // set the owning side to null (unless already changed)
+            if ($sku->getFolder() === $this) {
+                $sku->setFolder(null);
+            }
+        }
 
         return $this;
     }

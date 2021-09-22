@@ -36,9 +36,9 @@ class NorlogFolderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $folder = $form->getData();
-
+            foreach ($folder->getSkus() as $sku) {
+                $sku->setFolder($folder);
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($folder);
             $entityManager->flush();
@@ -47,7 +47,6 @@ class NorlogFolderController extends AbstractController
         }
 
         return $this->render('folder/new.html.twig', [
-            'folder' => $folder,
             'form' => $form->createView(),
         ]);
     }
@@ -68,6 +67,8 @@ class NorlogFolderController extends AbstractController
         $form = $this->createForm(NorlogFolderType::class, $folder);
         $form->handleRequest($request);
 
+        $folderSkus = $folder->getSkus();
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $folder = $form->getData();
@@ -79,9 +80,10 @@ class NorlogFolderController extends AbstractController
             return $this->redirectToRoute('folder_list');
         }
 
-        return $this->render('folder/index.html.twig', [
-            'folder' => $folder,
-            'form' => $form->createView()
+        return $this->render('folder/edit.html.twig', [
+            'folder'    => $folder,
+            'skus'      => $folderSkus,
+            'form'      => $form->createView()
         ]);
     }
 }

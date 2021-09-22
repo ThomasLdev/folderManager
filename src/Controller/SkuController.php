@@ -122,7 +122,7 @@ class SkuController extends AbstractController
             $entityManager->persist($Sku);
             $entityManager->flush();
 
-            return $this->redirectToRoute('sku_index');
+            return $this->redirectToRoute('sku_list');
 
         }
         return $this->render('sku/new.html.twig', [
@@ -257,7 +257,7 @@ class SkuController extends AbstractController
             $entityManager->persist($Sku);
             $entityManager->flush();
 
-            return $this->redirectToRoute('sku_index');
+            return $this->redirectToRoute('sku_list');
 
         }
         return $this->render('sku/edit.html.twig', [
