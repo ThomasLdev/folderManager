@@ -1,25 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Norlog{% endblock %}
+{% block title %}Sku{% endblock %}
 
 {% block body %}
     <div class="content" style="display: flex; flex-direction: column; align-items: center">
-        <h1 style="font-size: 8rem; position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%)">Norlog</h1>
 
-        <form action="{{ path('search_edit') }}" method="post">
-            <div class="input-group" style="width: 25%; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">
-                {% if error %}
-                <script>
-                    window.alert("{{ error }}")
-                </script>
-                {% endif %}
-                <input type="text" name="id" class="form-control" placeholder="Numéro de dossier" style="font-size: 1.5rem;">
-                <button type="submit" class="btn btn-primary" style="font-size: 1.5rem">OK</button>
-            </div>
+        <h1 style="font-size: 5rem">Liste des SKUs</h1>
+        <a href="{{ path('app_index') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; left: 10%; transform: translate(-50%, -50%)">Accueil</a>
+
+        <form action="{{ path('sku_export') }}" method="post" style="width: 75%; text-align: center;  margin-top: 2%">
+            <table class="table table-striped" style="border: 1px solid #000000;">
+                <thead>
+                <tr>
+                    <th>Sélectionner</th>
+                    <th>SKU</th>
+                    <th>Exporté</th>
+                    <th>Date de création</th>
+                    <th>Modifier</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sku in skus %}
+                    <tr>
+                        <td> <input class="form-check-input" type="checkbox" value="{{ sku.id }}" name="{{ "sku_" ~ sku.id }}"></td>
+                        <td>{{ sku.sku }}</td>
+                        <td>{{ sku.exported ? 'Oui' : 'Non' }}</td>
+                        <td>{{ sku.createdAt ? sku.createdAt|date('d-m-Y') : '' }}</td>
+                        <td>
+                            <a href="{{ path('sku_edit', {'id': sku.id}) }}"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="14">Pas de Sku existant</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button class="btn btn-primary" type="submit">Exporter</button>
         </form>
-
-        <a href="{{ path('sku_list') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 15%; transform: translate(-50%, -50%)">Liste dossiers</a>
-        <a href="{{ path('sku_new') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 50%; transform: translate(-50%, -50%)">Créer un Sku</a>
-        <a href="{{ path('option_list') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 85%; left: 85%; transform: translate(-50%, -50%)">Administrer listes</a>
     </div>
 {% endblock %}

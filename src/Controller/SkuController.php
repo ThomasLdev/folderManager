@@ -13,17 +13,30 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/sku")
+ */
 class SkuController extends AbstractController
 {
     /**
-     * @Route("/", name="sku_index")
+     * @Route("/search", name="sku_search")
      */
-    public function index(): Response
+    public function search(Request $request): Response
     {
-        return $this->render('sku/index.html.twig', [
-            'error' => false
-        ]);
+        $editId = $request->request->get('id');
+
+        //check si l'id est bien un nombre
+        if (is_numeric($editId)){
+            return $this->redirectToRoute('sku_edit', ['id' => (int) $editId]);
+        }
+        else
+        {
+            return $this->render('sku/index.html.twig', [
+                'error' => 'Veuillez entrer un nombre'
+            ]);
+        }
     }
+
     /**
      * @Route("/new", name="sku_new")
      */
@@ -119,32 +132,15 @@ class SkuController extends AbstractController
         ]);
     }
     /**
-     * @Route("/sku-list", name="sku_list", methods={"GET"})
+     * @Route("/list", name="sku_list", methods={"GET"})
      */
     public function SkuList(SkuRepository $SkuRepository): Response
     {
-        return $this->render('sku/sku-list.html.twig', [
+        return $this->render('sku/index.html.twig', [
             'skus' => $SkuRepository->findAll(),
         ]);
     }
-    /**
-     * @Route("/search-edit", name="search_edit")
-     */
-    public function searchEdit(Request $request): Response
-    {
-        $editId = $request->request->get('id');
 
-        //check si l'id est bien un nombre
-        if (is_numeric($editId)){
-            return $this->redirectToRoute('sku_edit', ['id' => (int) $editId]);
-        }
-        else
-        {
-            return $this->render('sku/index.html.twig', [
-                'error' => 'Veuillez entrer un nombre'
-            ]);
-        }
-    }
     /**
      * @Route("/{id}/edit", name="sku_edit")
      */
@@ -272,33 +268,6 @@ class SkuController extends AbstractController
     }
 
     /**
-     * @Route("/option-list", name="option_list")
-     */
-    public function optionList(Request $request, OptionRepository $optionRepository): Response
-    {
-        $typeNames = ['Designation', 'Taille', 'Marque', 'Composition', 'Etat', 'Couleur', 'Type'];
-
-        $option = new Option();
-
-        $form = $this->createForm(OptionType::class, $option);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($option);
-            $entityManager->flush();
-        }
-
-        return $this->render('sku/option-list.html.twig', [
-            'types' => $typeNames,
-            'options' => $optionRepository->findAll(),
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
      * @Route("/sku-export/", name="sku_export", methods={"POST"})
      */
     public function SkuExport(Request $request): Response
@@ -341,7 +310,7 @@ class SkuController extends AbstractController
     }
 
     /**
-     * @Route("sku-delete/{id}", name="sku_delete")
+     * @Route("/delete/{id}", name="sku_delete")
      */
     public function SkuDelete(Request $request, Sku $Sku): Response
     {
@@ -351,17 +320,5 @@ class SkuController extends AbstractController
             $entityManager->flush();
         }
         return $this->redirectToRoute('sku_index');
-    }
-
-    /**
-     * @Route("option-delete/{id}", name="option_delete")
-     */
-    public function optionDelete(Request $request, Option $option): Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($option);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('option_list');
     }
 }

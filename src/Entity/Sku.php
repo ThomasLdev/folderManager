@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\SkuRepository;
+use App\Entity\NorlogFolder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=SkuRepository::class)
+ * @ORM\Table(name="sku")
  */
 class Sku
 {
@@ -23,6 +25,12 @@ class Sku
      * @ORM\Column(type="string", length=255)
      */
     private $SKU;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=NorlogFolder::class, inversedBy="skus", cascade={"persist"})
+     * @ORM\JoinTable(name="skus_folders")
+     */
+    private $folders;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -52,6 +60,23 @@ class Sku
     public function __construct()
     {
         $this->options = new ArrayCollection();
+        $this->folders = new ArrayCollection();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFolders(): ArrayCollection
+    {
+        return $this->folders;
+    }
+
+    /**
+     * @param NorlogFolder $folder
+     */
+    public function addFolder(NorlogFolder $folder): void
+    {
+        $folder->addSku($this);
     }
 
     public function getId(): ?int

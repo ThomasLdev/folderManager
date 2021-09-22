@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dossiers Créés{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        {# <a href="{{ path('sku_index') }}" class="btn btn-primary">Accueil</a> #}
+
+        <div class="row">
+            <div class="col-12 pb-3 pt-3">
+                <a href="{{ path('app_index') }}" class="btn btn-primary btn-lg">Accueil</a>
+                <h1 class="display-3 text-center">Liste des dossiers</h1>
+            </div>
+        </div>
+
+        <hr style="height: 2px;">
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Numéro de dossier</th>
+                <th scope="col">Date de création</th>
+                <th scope="col">Modifier</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for folder in folders %}
+                <tr>
+                    <th scope="row">{{ folder.norlogReference }}</th>
+                    <td>{{ folder.createdAt ? folder.createdAt|date('d-m-Y') : '' }}</td>
+                    <td>
+                         <a href="{{ path('folder_edit', {'id': folder.id}) }}"><i class="fas fa-edit"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="14">Pas de dossier existant</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
