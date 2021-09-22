@@ -6,8 +6,8 @@
     <div class="content" style="display: flex; flex-direction: column; align-items: center">
         <h1 style="font-size: 5rem">Nouveau Sku</h1>
 
-        <a href="{{ path('sku_index') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; left: 10%; transform: translate(-50%, -50%)">Accueil</a>
-        <a href="{{ path('option_list') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; right: 10%; transform: translate(-50%, -50%)">Admin. listes</a>
+        <a href="{{ path('app_index') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; left: 10%; transform: translate(-50%, -50%)">Accueil</a>
+        <a href="{{ path('option_list') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; right: 10%; transform: translate(-50%, -50%)">Gérer Options</a>
 
         {{ include('sku/_form.html.twig') }}
     </div>

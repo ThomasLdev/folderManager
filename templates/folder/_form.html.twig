@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+<div class="my-custom-class-for-errors">
+    {{ form_errors(form) }}
+</div>
+
+<div class="row">
+        <div class="form-group p-4 d-flex flex-column">
+            {{ form_label(form.norlogReference, 'Référence du dossier') }}
+            {{ form_widget(form.norlogReference, {'attr': {'class': 'form-control-lg p-2', 'placeholder': 'XTOP'}}) }}
+        </div>
+    <div class="form-group p-4 d-flex flex-column">
+        {{ form_label(form.skus, 'SKU à ajouter') }}
+        {{ form_widget(form.skus, {'attr': {'class': 'form-control-lg p-2', 'placeholder': 'XR-55425'}}) }}
+    </div>
+</div>
+
+<button class="btn btn-primary" type="submit">Créer le dossier</button>
+
+{{ form_end(form) }}
