@@ -7,6 +7,7 @@ use App\Entity\Option;
 use App\Form\SkuType;
 use App\Form\OptionType;
 use App\Repository\SkuRepository;
+use App\Repository\NorlogFolderRepository;
 use App\Repository\OptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,18 +22,16 @@ class SkuController extends AbstractController
     /**
      * @Route("/search", name="sku_search")
      */
-    public function search(Request $request): Response
+    public function search(Request $request, NorlogFolderRepository $norlogFolderRepository): Response
     {
-        $editId = $request->request->get('id');
+        $folderRef = $request->request->get("norlogReference");
+        $folder = $norlogFolderRepository->findOneBy(["norlogReference" => $folderRef]);
 
-        //check si l'id est bien un nombre
-        if (is_numeric($editId)){
-            return $this->redirectToRoute('sku_edit', ['id' => (int) $editId]);
-        }
-        else
-        {
-            return $this->render('sku/index.html.twig', [
-                'error' => 'Veuillez entrer un nombre'
+        if ($folder) {
+            return $this->redirectToRoute('folder_edit', ['id' => (int)$folder->getId()]);
+        } else {
+            return $this->render('index.html.twig', [
+                'error' => 'La référence du dossier est inconnue'
             ]);
         }
     }
@@ -47,8 +46,7 @@ class SkuController extends AbstractController
         $typeNames = ['Designation', 'Taille', 'Marque', 'Composition', 'Etat', 'Couleur', 'Type'];
         $options = [];
 
-        foreach ($typeNames as $typeName)
-        {
+        foreach ($typeNames as $typeName) {
             $values = $this->getDoctrine()->getRepository(Option::class)->findDistinctByType($typeName);
             array_unshift($values, new Option());
             $options += [$typeName => $values];
@@ -68,9 +66,9 @@ class SkuController extends AbstractController
 
             if ($uploadedFile1) {
 
-                $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
                 $originalFilename1 = pathinfo($uploadedFile1->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename1 = $originalFilename1.'-'.uniqid().'.'.$uploadedFile1->guessExtension();
+                $newFilename1 = $originalFilename1 . '-' . uniqid() . '.' . $uploadedFile1->guessExtension();
 
                 $uploadedFile1->move(
                     $destination,
@@ -86,9 +84,9 @@ class SkuController extends AbstractController
             }
             if ($uploadedFile2) {
 
-                $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
                 $originalFilename2 = pathinfo($uploadedFile2->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename2 = $originalFilename2.'-'.uniqid().'.'.$uploadedFile2->guessExtension();
+                $newFilename2 = $originalFilename2 . '-' . uniqid() . '.' . $uploadedFile2->guessExtension();
 
                 $uploadedFile2->move(
                     $destination,
@@ -103,17 +101,15 @@ class SkuController extends AbstractController
 
             }
 
-            $Sku ->setCreatedAt(new \DateTime())
+            $Sku->setCreatedAt(new \DateTime())
                 ->setExported(false);
 
-            foreach ($Sku->getOptions() as $SkuOption)
-            {
-                if ($SkuOption->getValue() === null){
+            foreach ($Sku->getOptions() as $SkuOption) {
+                if ($SkuOption->getValue() === null) {
                     $SkuOption->setValue('');
                 }
                 $queryResult = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($SkuOption->getType(), $SkuOption->getValue());
-                if ($queryResult != null)
-                {
+                if ($queryResult != null) {
                     $Sku->getOptions()->removeElement($SkuOption);
                     $Sku->getOptions()->add($queryResult);
                 }
@@ -131,6 +127,7 @@ class SkuController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     /**
      * @Route("/list", name="sku_list", methods={"GET"})
      */
@@ -146,8 +143,7 @@ class SkuController extends AbstractController
      */
     public function edit(Request $request, Sku $Sku = null): Response
     {
-        if ($Sku == null)
-        {
+        if ($Sku == null) {
             return $this->render('sku/index.html.twig', [
                 'error' => 'Veuillez entrer un numéro de dossier existant'
             ]);
@@ -157,24 +153,20 @@ class SkuController extends AbstractController
         $optionsString = [];
         $tmpOptions = [];
 
-        foreach ($typeNames as $typeName)
-        {
+        foreach ($typeNames as $typeName) {
             $values = $this->getDoctrine()->getRepository(Option::class)->findDistinctByType($typeName);
 
             $shiftedOption = new Option();
 
-            foreach ($Sku->getOptions() as $SkuOption)
-            {
-                if ($SkuOption->getType() === $typeName)
-                {
+            foreach ($Sku->getOptions() as $SkuOption) {
+                if ($SkuOption->getType() === $typeName) {
                     $shiftedOption = $SkuOption;
                 }
             }
 
             array_unshift($values, new Option());
 
-            if ($shiftedOption->getValue())
-            {
+            if ($shiftedOption->getValue()) {
                 unset($values[array_search($shiftedOption, $values)]);
                 array_unshift($values, $shiftedOption);
             }
@@ -188,8 +180,7 @@ class SkuController extends AbstractController
 
         $Sku->getOptions()->clear();
 
-        foreach ($tmpOptions as $option)
-        {
+        foreach ($tmpOptions as $option) {
             $Sku->getOptions()->add($option);
         }
 
@@ -203,9 +194,9 @@ class SkuController extends AbstractController
 
             if ($uploadedFile1) {
 
-                $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
                 $originalFilename1 = pathinfo($uploadedFile1->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename1 = $originalFilename1.'-'.uniqid().'.'.$uploadedFile1->guessExtension();
+                $newFilename1 = $originalFilename1 . '-' . uniqid() . '.' . $uploadedFile1->guessExtension();
 
                 $uploadedFile1->move(
                     $destination,
@@ -221,9 +212,9 @@ class SkuController extends AbstractController
             }
             if ($uploadedFile2) {
 
-                $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
                 $originalFilename2 = pathinfo($uploadedFile2->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename2 = $originalFilename2.'-'.uniqid().'.'.$uploadedFile2->guessExtension();
+                $newFilename2 = $originalFilename2 . '-' . uniqid() . '.' . $uploadedFile2->guessExtension();
 
                 $uploadedFile2->move(
                     $destination,
@@ -238,17 +229,16 @@ class SkuController extends AbstractController
 
             }
 
-            $Sku ->setCreatedAt(new \DateTime())
+            $Sku->setCreatedAt(new \DateTime())
                 ->setExported(false);
 
             $entityManager = $this->getDoctrine()->getManager();
-            foreach ($Sku->getOptions() as $SkuOption)
-            {
-                if ($SkuOption->getValue() === null){
+            foreach ($Sku->getOptions() as $SkuOption) {
+                if ($SkuOption->getValue() === null) {
                     $SkuOption->setValue('');
                 }
                 $persistedOption = $this->getDoctrine()->getRepository(Option::class)->findOneByValueAndType($SkuOption->getType(), $SkuOption->getValue());
-                if ($persistedOption){
+                if ($persistedOption) {
                     $Sku->getOptions()->removeElement($SkuOption);
                     $Sku->getOptions()->add($persistedOption);
                 }
@@ -268,35 +258,37 @@ class SkuController extends AbstractController
     }
 
     /**
-     * @Route("/sku-export/", name="sku_export", methods={"POST"})
+     * @Route("/sku-export/", name="sku_export")
      */
-    public function SkuExport(Request $request): Response
+    public function SkuExport(Request $request, SkuRepository $skuRepository): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        $SkuIds = $request->request->all();
+        $Skus = $skuRepository->findBy(['exported' => false]);
 
-        $SkuRows = ['ID;SKU;Photo_1;Photo_2;Date;Marque;Couleur;Composition;Designation;Taille;Etat;Type'];
+        $SkuRows = ['ID;Folder_Reference;SKU;Photo_1;Photo_2;Date;Marque;Couleur;Composition;Designation;Taille;Etat;Type'];
 
-        foreach ($SkuIds as $SkuId)
-        {
-            $Sku = $this->getDoctrine()->getRepository(Sku::class)->find($SkuId);
+        foreach ($Skus as $Sku) {
             $SkuEntry = [
                 $Sku->getId(),
+                $Sku->getFolder()->getId(),
                 $Sku->getSKU(),
-                ($Sku->getPicture1() == 'empty') ? 'empty' : 'https://' . $request->getHost().'/uploads/'.$Sku->getPicture1(),
-                ($Sku->getPicture2() == 'empty') ? 'empty' : 'https://' . $request->getHost().'/uploads/'.$Sku->getPicture2(),
+                ($Sku->getPicture1() == 'empty') ? 'empty' : 'https://' . $request->getHost() . '/uploads/' . $Sku->getPicture1(),
+                ($Sku->getPicture2() == 'empty') ? 'empty' : 'https://' . $request->getHost() . '/uploads/' . $Sku->getPicture2(),
                 $Sku->getCreatedAt()->format('Y-m-d'),
             ];
-            $options = $Sku->getOptions()->toArray();
-            usort($options, function ($a, $b) { return strcasecmp($a->getType(), $b->getType()); });
 
-            foreach ($options as $option)
-            {
+            $options = $Sku->getOptions()->toArray();
+            usort($options, function ($a, $b) {
+                return strcasecmp($a->getType(), $b->getType());
+            });
+
+            foreach ($options as $option) {
                 array_push($SkuEntry, ($option->getValue() != '') ? $option->getValue() : 'none');
             }
+
             $SkuRows[] = implode(';', $SkuEntry);
-            $Sku->setExported(true);
+//            $Sku->setExported(true);
 
             $entityManager->persist($Sku);
         }
@@ -314,7 +306,7 @@ class SkuController extends AbstractController
      */
     public function SkuDelete(Request $request, Sku $Sku): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$Sku->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $Sku->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($Sku);
             $entityManager->flush();

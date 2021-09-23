@@ -6,11 +6,13 @@ use App\Repository\SkuRepository;
 use App\Entity\NorlogFolder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=SkuRepository::class)
  * @ORM\Table(name="sku")
+ * @UniqueEntity("SKU")
  */
 class Sku
 {
@@ -60,6 +62,7 @@ class Sku
     {
         $this->options = new ArrayCollection();
         $this->folders = new ArrayCollection();
+        $this->exported = false;
     }
 
     public function getId(): ?int

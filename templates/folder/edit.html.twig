@@ -3,23 +3,41 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12">
-                <h1 class="display-1 text-center">Editer un dossier</h1>
-                <hr>
+            <div class="col-12 d-flex justify-content-around align-items-center p-3">
+                <a href="{{ path('app_index') }}" class="btn btn-primary display-3 btn-nav">Accueil</a>
+                <h1 class="display-2">Editer un dossier</h1>
+                <a href="{{ path('option_list') }}" class="btn btn-primary display-3 btn-nav">Gérer Options</a>
             </div>
         </div>
+
+        <hr style="height: 2px">
 
         <div class="row">
             <div class="col-12 text-center">
                 <h2>SKU déjà liés</h2>
             </div>
             <div class="col-12 text-center">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">SKU</th>
+                        <th scope="col">Dissocier</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                 {% for sku in skus %}
-                    <p>{{ sku.SKU }}</p>
+                        <tr>
+                            <td>{{ sku.SKU }}</td>
+                            <td> <a href="{{ path('folder_dissociate_sku', {sku: sku.SKU, id: folder.id}) }}"><i class="far fa-minus-square"></i></a></td>
+                        </tr>
                 {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
-        <hr>
+
+        <hr style="height: 2px">
+
         <div class="row">
             <div class="col-12 d-flex flex-column justify-content-center align-items-center">
                 {{ include('folder/_form.html.twig') }}

@@ -7,10 +7,12 @@
         {# <a href="{{ path('sku_index') }}" class="btn btn-primary">Accueil</a> #}
 
         <div class="row">
-            <div class="col-12 pb-3 pt-3">
-                <a href="{{ path('app_index') }}" class="btn btn-primary btn-lg">Accueil</a>
-                <h1 class="display-3 text-center">Liste des dossiers</h1>
+            <div class="col-12 d-flex justify-content-around align-items-center p-3">
+                <a href="{{ path('app_index') }}" class="btn btn-primary display-3">Accueil</a>
+                <h1 class="display-2">Liste des dossiers</h1>
+                <a href="{{ path('option_list') }}" class="btn btn-primary display-3">Gérer Options</a>
             </div>
+            <hr style="height: 2px">
         </div>
 
         <hr style="height: 2px;">
@@ -20,7 +22,7 @@
             <tr>
                 <th scope="col">Numéro de dossier</th>
                 <th scope="col">Date de création</th>
-                <th scope="col">Modifier</th>
+                <th scope="col">Modifier/Ajout Sku</th>
             </tr>
             </thead>
             <tbody>
@@ -29,7 +31,7 @@
                     <th scope="row">{{ folder.norlogReference }}</th>
                     <td>{{ folder.createdAt ? folder.createdAt|date('d-m-Y') : '' }}</td>
                     <td>
-                         <a href="{{ path('folder_edit', {'id': folder.id}) }}"><i class="fas fa-edit"></i></a>
+                        <a href="{{ path('folder_edit', {'id': folder.id}) }}"><i class="fas fa-edit"></i></a>
                     </td>
                 </tr>
             {% else %}
@@ -39,6 +41,14 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12">
+                <a class="btn btn-primary" href="{{ path('sku_export') }}">Exporter Skus</a>
+                <a class="btn btn-primary" href="{{ path('sku_list') }}">Lister Skus</a>
+            </div>
+        </div>
+
     </div>
 
 {% endblock %}

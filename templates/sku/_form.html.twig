@@ -1,30 +1,56 @@
-<div class="form-content" style="width: 40%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: left">
-    {{ form_start(form, {'attr': {'autocomplete': 'off', 'enctype':"multipart/form-data"}}) }}
-    <label for="SKU">SKU</label>
-    {{ form_widget(form.SKU, {'attr': {'id': 'SKU', 'class': 'form-control', 'style': 'margin-bottom: 2%'}}) }}
-
-    {% for option in form.options %}
-        <input id="{{ option.children.type.vars.id }}" type="text" name="{{ option.children.type.vars.full_name }}" value="{{ option.children.type.vars.value }}" style="display: none">
-        <label for="{{ option.children.type.vars.id }}">{{ option.children.type.vars.value }}</label>
-        <select class="form-select" name="{{ option.children.value.vars.full_name }}" id="{{ option.children.value.vars.id }}" style="margin-bottom: 2%">
-            {% for value in options[option.vars.value.type] %}
-                <option value="{{ value.value }}">{{ value.value }}</option>
+<div class="container">
+    <div class="row">
+        <div class="form-group">
+            {{ form_start(form, {'attr': {'autocomplete': 'off', 'enctype':"multipart/form-data"}}) }}
+            <label for="SKU">SKU</label>
+            {{ form_widget(form.SKU, {'attr': {'id': 'SKU', 'class': 'form-control', 'style': 'margin-bottom: 2%'}}) }}
+        </div>
+        <div class="form-group d-flex flex-column">
+            {% for option in form.options %}
+                <div class="row">
+                    <div class="col-12">
+                        <label for="{{ option.children.type.vars.id }}">{{ option.children.type.vars.value }}</label>
+                        <input id="{{ option.children.type.vars.id }}" type="text"
+                               name="{{ option.children.type.vars.full_name }}" value="{{ option.children.type.vars.value }}"
+                               style="display: none">
+                        <select class="form-select" name="{{ option.children.value.vars.full_name }}"
+                                id="{{ option.children.value.vars.id }}">
+                            {% for value in options[option.vars.value.type] %}
+                                <option value="{{ value.value }}">{{ value.value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
             {% endfor %}
-        </select>
-    {% endfor %}
-    <div class="input-group" style="margin-top: 3%">
-        <input type="file" name="image" accept="image/*;capture=camera">
-        {{ form_widget(form.picture_1, {'attr': {'id': 'picture-1', 'class': 'form-control', 'placeholder': 'Photo 1'}}) }}
-        <a onclick="takePicture1()" class="btn btn-primary" style="margin-right: 15px; border-top-right-radius: .25rem; border-bottom-right-radius: .25rem"><i class="fas fa-camera"></i></a>
-        {{ form_widget(form.picture_2, {'attr': {'id': 'picture-2', 'class': 'form-control', 'placeholder': 'Photo 2', 'style': 'border-top-left-radius: .25rem; border-bottom-left-radius: .25rem'}}) }}
-        <a onclick="takePicture2()" class="btn btn-primary"><i class="fas fa-camera"></i></a>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-12">
+                    <label for="image">Images Sku</label>
+                    <input type="file" name="image" accept="image/*;capture=camera" hidden>
+                    {{ form_widget(form.picture_1, {'attr': {'id': 'picture-1', 'class': 'form-control', 'placeholder': 'Photo 1'}}) }}
+                    <a onclick="takePicture1()" class="btn btn-primary"><i class="fas fa-camera"></i></a>
+                    {{ form_widget(form.picture_2, {'attr': {'id': 'picture-2', 'class': 'form-control', 'placeholder': 'Photo 2'}}) }}
+                    <a onclick="takePicture2()" class="btn btn-primary"><i class="fas fa-camera"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 p-3">
+                <button class="btn btn-primary p-3" type="submit">{{ button_label|default('Créer') }}</button>
+            </div>
+        </div>
+
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+        <video id="video" playsinline autoplay style="display: none"></video>
+        <canvas id="canvas" width="720" height="720" style="display: none"></canvas>
+
     </div>
-    <button class="btn btn-primary" type="submit" style="font-size: 1.5rem; margin-top: 5%; position: absolute; left: 50%; transform: translateX(-50%)">{{ button_label|default('Créer') }}</button>
-    {{ form_row(form._token) }}
-    {{ form_end(form, {'render_rest': false}) }}
-    <video id="video" playsinline autoplay style="display: none"></video>
-    <canvas id="canvas" width="720" height="720" style="display: none"></canvas>
 </div>
+
 <script>
     const video = document.getElementById("video");
     const canvas = document.getElementById("canvas");

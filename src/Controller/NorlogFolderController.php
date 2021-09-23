@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\NorlogFolder;
 use App\Form\NorlogFolderType;
 use App\Repository\NorlogFolderRepository;
+use App\Repository\SkuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,11 +53,17 @@ class NorlogFolderController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{id}", name="folder_delete")
+     * @Route("/dissociateSku/{id}", name="folder_dissociate_sku")
      */
-    public function delete(Request $request): Response
+    public function dissociateSku(Request $request, NorlogFolder $norlogFolder, SkuRepository $skuRepository): Response
     {
-        //TODO
+        $sku = $skuRepository->findBy(['SKU' => $request->get('sku')]);
+        $norlogFolder->removeSku($sku[0]);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($norlogFolder);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('folder_edit', ['id' => $norlogFolder->getId()]);
     }
 
     /**
@@ -73,11 +80,19 @@ class NorlogFolderController extends AbstractController
 
             $folder = $form->getData();
 
+            foreach ($folder->getSkus() as $sku) {
+                $sku->setFolder($folder);
+            }
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($folder);
             $entityManager->flush();
 
-            return $this->redirectToRoute('folder_list');
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($folder);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('folder_edit', ['id' => $folder->getId()]);
         }
 
         return $this->render('folder/edit.html.twig', [

@@ -45,7 +45,7 @@ class NorlogFolder
     private ?DateTime $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sku::class, mappedBy="folder", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Sku::class, mappedBy="folder", cascade={"persist", "remove"})
      */
     private $skus;
 
@@ -118,5 +118,10 @@ class NorlogFolder
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getNorlogReference();
     }
 }

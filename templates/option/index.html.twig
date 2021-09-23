@@ -3,23 +3,30 @@
 {% block title %}Options des SKUs{% endblock %}
 
 {% block body %}
-    <div class="content" style="display: flex; flex-direction: column; align-items: center">
+    <div class="container-fluid">
 
-        <h1 style="font-size: 5rem">Administrer listes</h1>
-        <a href="{{ path('app_index') }}" class="btn btn-primary" style="font-size: 1.5rem; position: absolute; top: 5%; left: 10%; transform: translate(-50%, -50%)">Accueil</a>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-around align-items-center p-3">
+                <a href="{{ path('app_index') }}" class="btn btn-primary display-3">Accueil</a>
+                <h1 class="display-2">Gérer la liste des options</h1>
+                <a href="{{ path('option_list') }}" class="btn btn-primary display-3">Gérer Options</a>
+            </div>
+            <hr style="height: 2px">
+        </div>
 
-        <div class="form-content" style="width: 30%; text-align: center; margin-top: 2%">
+        <div class="form-content">
             {{ form_start(form, {'attr': {'autocomplete': 'off'}}) }}
-            <select class="form-select" name="{{ form.children.type.vars.full_name }}" id="{{ form.children.type.vars.id }}">
+            <select class="form-select" name="{{ form.children.type.vars.full_name }}"
+                    id="{{ form.children.type.vars.id }}">
                 {% for typeName in types %}
                     <option value="{{ typeName }}">{{ typeName }}</option>
                 {% endfor %}
             </select>
-            <div class="input-group"  style="margin: 3% 0">
+            <div class="input-group" style="margin: 3% 0">
                 {{ form_widget(form.value, {'attr': {'class': 'form-control'}}) }}
                 <button class="btn btn-primary" type="submit">{{ button_label|default('Créer') }}</button>
             </div>
-            <div class="input-group"  style="margin: 3% 0">
+            <div class="input-group" style="margin: 3% 0">
 
             </div>
             {{ form_row(form._token) }}
@@ -39,7 +46,8 @@
                         <td>{{ option.type }}</td>
                         <td>{{ option.value }}</td>
                         <td>
-                            <a href="{{ path('option_delete', {'id': option.id}) }}"><i class="fas fa-trash-alt"></i></a>
+                            <a href="{{ path('option_delete', {'id': option.id}) }}"><i
+                                        class="fas fa-trash-alt"></i></a>
                         </td>
                     </tr>
                 {% else %}
@@ -50,6 +58,5 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 {% endblock %}

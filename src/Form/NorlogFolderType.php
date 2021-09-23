@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
 class NorlogFolderType extends AbstractType
 {
@@ -17,7 +18,12 @@ class NorlogFolderType extends AbstractType
             ->add('norlogReference', TextType::class)
             ->add('skus', EntityType::class, [
                 'class' => Sku::class,
-                'multiple' => true
+                'multiple' => true,
+                'query_builder' => function (EntityRepository $e) {
+                    return $e->createQueryBuilder('sku')
+                        ->select('sku')
+                        ->where('sku.folder IS NULL');
+                }
             ]);
     }
 }
