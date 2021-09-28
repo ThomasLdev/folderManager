@@ -15,11 +15,12 @@
 ###< symfony/phpunit-bridge ###
 
 ###< docker/local-setup ###
+/_docker
 docker-compose.yml
-/php
 ###< docker/local-setup ###
 
 ###< local/extra ###
+.git
 .idea
 public/uploads/
 ###< local/extra ###
