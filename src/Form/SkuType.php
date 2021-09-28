@@ -27,7 +27,8 @@ class SkuType extends AbstractType
             ])
             ->add('picture_2', FileType::class, [
                 'mapped' => false,
-                'required' => false
+                'required' => false,
+                'attr' => ['accept' => 'image/*']
             ])
         ;
     }

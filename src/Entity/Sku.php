@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SkuRepository;
 use App\Entity\NorlogFolder;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -63,6 +64,7 @@ class Sku
         $this->options = new ArrayCollection();
         $this->folders = new ArrayCollection();
         $this->exported = false;
+        $this->createdAt = new DateTime();
     }
 
     public function getId(): ?int

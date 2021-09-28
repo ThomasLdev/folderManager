@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Norlog - Créer un dossier{% endblock %}
+
+{% block bodyClass %}newSku{% endblock %}
+
 {% block body %}
 <div class="container-fluid">
     <div class="row">
@@ -9,6 +13,8 @@
             <a href="{{ path('option_list') }}" class="btn btn-primary display-3 btn-nav">Gérer Options</a>
         </div>
     </div>
+
+    <hr>
 
     <div class="row">
         <div class="col-12 d-flex flex-column justify-content-center align-items-center">

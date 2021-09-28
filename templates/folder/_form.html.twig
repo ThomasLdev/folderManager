@@ -1,19 +1,85 @@
-{{ form_start(form) }}
-<div class="my-custom-class-for-errors">
-    {{ form_errors(form) }}
+{{ form_start(form, {
+    attr: {
+        class: 'sku-form'
+    }
+}) }}
+
+<div class="form-group">
+    {{ form_row(form.norlogReference,  {
+        attr: {
+            placeholder: 'Référence du dossier',
+            class: 'sku-form-input'
+        }
+    }) }}
 </div>
 
-<div class="row">
-        <div class="form-group p-4 d-flex flex-column">
-            {{ form_label(form.norlogReference, 'Référence du dossier') }}
-            {{ form_widget(form.norlogReference, {'attr': {'class': 'form-control-lg p-2', 'placeholder': 'XTOP36'}}) }}
+<div class="form-group sku-row skus" data-prototype="{{ form_widget(form.skus.vars.prototype)|e('html_attr') }}">
+    {% if form.skus %}
+    {% for sku in form.skus %}
+        <div class="row sku-bloc bg-light">
+            <div class="field-title">
+{#                <a href="#" class="btn btn-danger delete-field">#}
+{#                    <i class="fas fa-trash-alt"></i>#}
+{#                </a>#}
+                <p class="display-3 text-center">Produit #{{ loop.index }}</p>
+            </div>
+            <span class="btn btn-secondary form-extend-btn">Voir</span>
+            <div class="col-12 sku-fields-bloc">
+                    <div class="form-control">
+                        {{ form_row(sku.SKU, {
+                            attr: {
+                                placeholder: 'SKU du produit',
+                                class: 'sku-form-input'
+                            }
+                        }) }}
+                    </div>
+                    <div class="form-control option-control" style>
+                        {{ form_row(sku.options, {
+                            attr: {
+                                placeholder: 'Options du produit',
+                                class: 'sku-form-input p-2 p-2'
+                            }
+                        }) }}
+                    </div>
+                    <div class="form-control">
+                        {{ form_row(sku.picture_1, {
+                            attr: {
+                                placeholder: 'Image 1',
+                                class: 'sku-form-input'
+                            }
+                        }) }}
+                    </div>
+                    <div class="form-control">
+                        {{ form_row(sku.picture_2, {
+                            attr: {
+                                placeholder: 'Image 2',
+                                class: 'sku-form-input'
+                            }
+                        }) }}
+                    </div>
+                </div>
         </div>
-    <div class="form-group p-4 d-flex flex-column">
-        {{ form_label(form.skus, 'SKU à ajouter') }}
-        {{ form_widget(form.skus, {'attr': {'class': 'form-control-lg p-2', 'placeholder': 'LO55425'}}) }}
+    {% endfor %}
+        {% else %}
+        <div class="row">
+            <div class="col-12">
+                Pas encore de Sku lié au colis
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+
+<div class="container form-actions d-flex justify-content-center align-items-center flex-wrap w-100">
+    <div class="row">
+        <div class="col-6">
+            <button type="button" class="btn btn-primary add_item_link" data-collection-holder-class="skus">
+                Ajouter SKU
+            </button>
+        </div>
+        <div class="col-6">
+            <button type="submit" class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+        </div>
     </div>
 </div>
-
-<button class="btn btn-primary" type="submit">Créer le dossier</button>
-
 {{ form_end(form) }}
