@@ -14,13 +14,6 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
-###< docker/local-setup ###
-/php
-/_docker
-docker-compose.yml
-Dockerfile
-###< docker/local-setup ###
-
 ###< local/extra ###
 .git
 .idea

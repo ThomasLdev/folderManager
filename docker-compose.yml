@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+
+  database:
+    image: mysql:5.7
+    container_name: db_folderManager
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks:
+      - dev
+
+  php:
+    build: .
+    container_name: php_folderManager
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./php/host:/etc/apache2/sites-enabled
+    networks:
+      - dev
+#    links:
+#      - database
+
+networks:
+  dev:
+
+volumes:
+  db-data:
