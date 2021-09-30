@@ -15,8 +15,8 @@ if (editPage.length !== 0 || newPage.length !== 0) {
             // add a new tag form (see next code block)
             addFormToCollection($collectionHolderClass);
         })
-        // add a delete link to all of the existing tag form li elements
-        skusDiv.find('div.custom-file').each(function () {
+        // add a delete link to all of the existing skus
+        skusDiv.find('div.sku-bloc').each(function () {
             addTagFormDeleteLink($(this));
         });
 
@@ -33,7 +33,6 @@ if (editPage.length !== 0 || newPage.length !== 0) {
                 clicked = 0;
             }
         });
-
     });
 
     function addFormToCollection($collectionHolderClass) {
@@ -55,11 +54,11 @@ if (editPage.length !== 0 || newPage.length !== 0) {
         // increase the index with one for the next item
         $collectionHolder.data('index', index + 1);
         // Display the form in the page in an li, before the "Add a tag" link li
-        let $newFormDiv = $('<div class="list-group-item bg-light mt-3 mb-3"></div>').append(newForm);
+        let $newFormDiv = $('<div class="row sku-bloc bg-light"></div>').append(newForm);
         // Add the new form at the end of the list
         $collectionHolder.append($newFormDiv)
         let $tagFormDiv = $newFormDiv;
-        let $removeFormButton = $('<button class="btn bg-alt btn-home text-white mt-3" type="button">Delete Sku</button>');
+        let $removeFormButton = $('<button class="btn bg-danger" type="button"><i class="fas fa-trash-alt"></i></button>');
         $tagFormDiv.append($removeFormButton);
         $removeFormButton.on('click', function () {
             // remove the li for the tag form
@@ -67,13 +66,13 @@ if (editPage.length !== 0 || newPage.length !== 0) {
         });
     }
 
-    function addTagFormDeleteLink($tagFormDiv) {
-        let $removeFormButton = $('<button class="btn bg-alt btn-home text-white mt-3" type="button"><i class="fas fa-trash-alt"></i></button>');
-        $tagFormDiv.append($removeFormButton);
+    function addTagFormDeleteLink($skuFormDiv) {
+        let $removeFormButton = $('<button class="btn bg-danger" type="button"><i class="fas fa-trash-alt"></i></button>');
+        $skuFormDiv.append($removeFormButton);
 
         $removeFormButton.on('click', function () {
             // remove the div for the tag form
-            $tagFormDiv.closest('.sku-row').remove();
+            $skuFormDiv.closest('.sku-bloc').remove();
         });
     }
 }

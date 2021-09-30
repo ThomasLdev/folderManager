@@ -22,18 +22,6 @@ class AppFixtures extends Fixture
                 $sku->setFolder($folder);
                 $sku->setPicture1('/media/image-holder.jpeg');
                 $sku->setPicture2('/media/image-holder.jpeg');
-                // SKU OPTION 1
-                $option1 = new Option();
-                $option1->addSku($sku);
-                $option1->setType('Color');
-                $option1->setValue('Rouge');
-                $manager->persist($option1);
-                // SKU OPTION 2
-                $option2 = new Option();
-                $option2->addSku($sku);
-                $option2->setType('Taille');
-                $option2->setValue('XL');
-                $manager->persist($option2);
 
                 $manager->persist($sku);
             }

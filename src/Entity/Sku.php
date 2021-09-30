@@ -27,27 +27,27 @@ class Sku
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $SKU;
+    private ?string $SKU;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $picture_1;
+    private ?string $picture_1;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $picture_2;
+    private ?string $picture_2;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private DateTime $createdAt;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $exported;
+    private bool $exported;
 
     /**
      * @ORM\ManyToMany(targetEntity=Option::class, inversedBy="skus", cascade={"persist"})
@@ -57,7 +57,7 @@ class Sku
     /**
      * @ORM\ManyToOne(targetEntity=NorlogFolder::class, inversedBy="skus")
      */
-    private $folder;
+    private ?\App\Entity\NorlogFolder $folder;
 
     public function __construct()
     {
@@ -108,12 +108,12 @@ class Sku
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -167,8 +167,8 @@ class Sku
 
         return $this;
     }
-    public function __toString()
-    {
-        return $this->getSKU();
-    }
+//    public function __toString()
+//    {
+//        return $this->getSKU();
+//    }
 }

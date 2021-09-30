@@ -22,7 +22,7 @@ class NorlogFolderController extends AbstractController
     public function list(NorlogFolderRepository $folderRepository): Response
     {
         return $this->render('folder/index.html.twig', [
-            'folders' => $folderRepository->findAll(),
+            'norlogFolders' => $folderRepository->findAll(),
         ]);
     }
 
@@ -31,20 +31,21 @@ class NorlogFolderController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $folder = new NorlogFolder();
+        $norlogFolder = new NorlogFolder();
 
-        $form = $this->createForm(NorlogFolderType::class, $folder);
+        $form = $this->createForm(NorlogFolderType::class, $norlogFolder);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($folder->getSkus() as $sku) {
-                $sku->setFolder($folder);
+            foreach ($norlogFolder->getSkus() as $sku) {
+                $sku->setFolder($norlogFolder);
+                $sku->setSKU($norlogFolder->getNorlogReference().'-'.$sku->getSKU());
             }
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($folder);
+            $entityManager->persist($norlogFolder);
             $entityManager->flush();
 
-            return $this->redirectToRoute('folder_list');
+            return $this->redirectToRoute('folder_edit', ['id' => $norlogFolder->getId()]);
         }
 
         return $this->render('folder/new.html.twig', [
@@ -53,50 +54,45 @@ class NorlogFolderController extends AbstractController
     }
 
     /**
-     * @Route("/dissociateSku/{id}", name="folder_dissociate_sku")
+     * @Route("/dissociateSku/{id}", name="folder_delete")
      */
     public function dissociateSku(Request $request, NorlogFolder $norlogFolder, SkuRepository $skuRepository): Response
     {
-        $sku = $skuRepository->findBy(['SKU' => $request->get('sku')]);
-        $norlogFolder->removeSku($sku[0]);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($norlogFolder);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('folder_edit', ['id' => $norlogFolder->getId()]);
+        //TODO
     }
 
     /**
      * @Route("/edit/{id}", name="folder_edit")
      */
-    public function edit(Request $request, NorlogFolder $folder): Response
+    public function edit(Request $request, NorlogFolder $norlogFolder): Response
     {
-        $form = $this->createForm(NorlogFolderType::class, $folder);
+        $form = $this->createForm(NorlogFolderType::class, $norlogFolder);
         $form->handleRequest($request);
 
-        $folderSkus = $folder->getSkus();
+        $folderSkus = $norlogFolder->getSkus();
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $folder = $form->getData();
+            $norlogFolder = $form->getData();
 
-            foreach ($folder->getSkus() as $sku) {
-                $sku->setFolder($folder);
+            foreach ($norlogFolder->getSkus() as $sku) {
+                $sku->setFolder($norlogFolder);
+                $sku->setSKU($norlogFolder->getNorlogReference().'-'.$sku->getSKU());
             }
             
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($folder);
+            $entityManager->persist($norlogFolder);
             $entityManager->flush();
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($folder);
+            $entityManager->persist($norlogFolder);
             $entityManager->flush();
 
-            return $this->redirectToRoute('folder_edit', ['id' => $folder->getId()]);
+            return $this->redirectToRoute('folder_edit', ['id' => $norlogFolder->getId()]);
         }
 
         return $this->render('folder/edit.html.twig', [
-            'folder'    => $folder,
+            'norlogFolder'    => $norlogFolder,
             'skus'      => $folderSkus,
             'form'      => $form->createView()
         ]);

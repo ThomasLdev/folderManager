@@ -15,8 +15,6 @@
             <hr style="height: 2px">
         </div>
 
-        <hr style="height: 2px;">
-
         <table class="table table-striped">
             <thead>
             <tr>
@@ -26,7 +24,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for folder in folders %}
+            {% for folder in norlogFolders %}
                 <tr>
                     <th scope="row">{{ folder.norlogReference }}</th>
                     <td>{{ folder.createdAt ? folder.createdAt|date('d-m-Y') : '' }}</td>
@@ -42,13 +40,12 @@
             </tbody>
         </table>
 
-        <div class="row d-flex justify-content-center align-items-center">
+        <div class="row d-flex justify-content-center align-items-center mt-3 mb-3">
             <div class="col-12">
                 <a class="btn btn-primary" href="{{ path('sku_export') }}">Exporter Skus</a>
                 <a class="btn btn-primary" href="{{ path('sku_list') }}">Lister Skus</a>
             </div>
         </div>
-
     </div>
 
 {% endblock %}

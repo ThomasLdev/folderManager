@@ -7,7 +7,7 @@
 <div class="form-group">
     {{ form_row(form.norlogReference,  {
         attr: {
-            placeholder: 'Référence du dossier',
+            placeholder: 'ex: XOTP-25',
             class: 'sku-form-input'
         }
     }) }}
@@ -15,25 +15,22 @@
 
 <div class="form-group sku-row skus" data-prototype="{{ form_widget(form.skus.vars.prototype)|e('html_attr') }}">
     {% if form.skus %}
-    {% for sku in form.skus %}
-        <div class="row sku-bloc bg-light">
-            <div class="field-title">
-{#                <a href="#" class="btn btn-danger delete-field">#}
-{#                    <i class="fas fa-trash-alt"></i>#}
-{#                </a>#}
-                <p class="display-3 text-center">Produit #{{ loop.index }}</p>
-            </div>
-            <span class="btn btn-secondary form-extend-btn">Voir</span>
-            <div class="col-12 sku-fields-bloc">
+        {% for sku in form.skus %}
+            <div class="row sku-bloc bg-light">
+                <div class="field-title">
+                    <p class="display-3 text-center">Produit #{{ loop.index }}</p>
+                </div>
+                <span class="btn btn-secondary form-extend-btn">Voir</span>
+                <div class="col-12 sku-fields-bloc">
                     <div class="form-control">
                         {{ form_row(sku.SKU, {
                             attr: {
-                                placeholder: 'SKU du produit',
+                                placeholder: 'ex: XVF-25663',
                                 class: 'sku-form-input'
                             }
                         }) }}
                     </div>
-                    <div class="form-control option-control" style>
+                    <div class="form-control option-control">
                         {{ form_row(sku.options, {
                             attr: {
                                 placeholder: 'Options du produit',
@@ -41,6 +38,7 @@
                             }
                         }) }}
                     </div>
+
                     <div class="form-control">
                         {{ form_row(sku.picture_1, {
                             attr: {
@@ -58,16 +56,15 @@
                         }) }}
                     </div>
                 </div>
-        </div>
-    {% endfor %}
-        {% else %}
+            </div>
+        {% endfor %}
+    {% else %}
         <div class="row">
             <div class="col-12">
                 Pas encore de Sku lié au colis
             </div>
         </div>
     {% endif %}
-
 </div>
 
 <div class="container form-actions d-flex justify-content-center align-items-center flex-wrap w-100">

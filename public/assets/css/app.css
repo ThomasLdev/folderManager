@@ -67,6 +67,9 @@ body {
     top: 5px;
     left: 5px;
 }
+.help-text {
+    font-size: 13px;
+}
 /**
 INDEX SCREEN - END
  */

@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=OptionRepository::class)
  * @ORM\Table(name="`option`")
+ * @UniqueEntity("type")
+ * @UniqueEntity("value")
  */
 class Option
 {
@@ -23,12 +25,12 @@ class Option
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $type;
+    private ?string $type;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $value;
+    private ?string $value;
 
     /**
      * @ORM\ManyToMany(targetEntity=Sku::class, mappedBy="options")

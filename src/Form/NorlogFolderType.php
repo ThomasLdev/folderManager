@@ -14,7 +14,9 @@ class NorlogFolderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('norlogReference', TextType::class)
+            ->add('norlogReference', TextType::class, [
+                'label' => 'Référence du dossier'
+            ])
             ->add('skus', CollectionType::class, [
                 'entry_type' => SkuType::class,
                 'entry_options' => ['label' => false],
