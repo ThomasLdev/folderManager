@@ -21,11 +21,10 @@ class SkuType extends AbstractType
                 'label' => 'SKU du produit',
                 'help' => 'La référence du dossier lié sera ajoutée automatiquement au SKU'
             ])
-            ->add('options', EntityType::class, [
-                'label' => 'Options du produit',
-                'class' => Option::class,
-                'required' => true,
-                'multiple' => true
+            ->add('options', CollectionType::class, [
+                'entry_type' => OptionType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
             ])
             ->add('picture_1', FileType::class, [
                 'label' => 'Image 1 du produit',

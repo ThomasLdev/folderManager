@@ -29,9 +29,19 @@ class Value
      */
     private $options;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="value")
+     */
+    private $type;
+
     public function __construct()
     {
         $this->options = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -77,6 +87,26 @@ class Value
                 $option->setValue(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the value of type
+     *
+     * @return  self
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }

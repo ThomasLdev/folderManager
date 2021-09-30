@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Option;
+use App\Entity\Value;
+use App\Form\OptionAddType;
 use App\Form\OptionType;
 use App\Repository\OptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,23 +22,24 @@ class OptionController extends AbstractController
      */
     public function optionList(Request $request, OptionRepository $optionRepository): Response
     {
-        $typeNames = ['Designation', 'Taille', 'Marque', 'Composition', 'Etat', 'Couleur', 'Type'];
-
         $option = new Option();
-
-        $form = $this->createForm(OptionType::class, $option);
+        $form = $this->createForm(OptionAddType::class, $option);
 
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+
+            $oValue = new Value();
+            $oValue->setName($form->get('value')->getData());
+            $oValue->setType($option->getType());
+            $entityManager->persist($oValue);
+
+            $option->setValue($oValue);
             $entityManager->persist($option);
             $entityManager->flush();
         }
 
         return $this->render('option/index.html.twig', [
-            'types' => $typeNames,
             'options' => $optionRepository->findAll(),
             'form' => $form->createView(),
         ]);
