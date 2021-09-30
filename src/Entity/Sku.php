@@ -32,12 +32,12 @@ class Sku
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $picture_1;
+    private ?string $picture_1 = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $picture_2;
+    private ?string $picture_2 = '';
 
     /**
      * @ORM\Column(type="datetime")

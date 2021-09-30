@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Option;
 use App\Entity\Sku;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -19,11 +21,11 @@ class SkuType extends AbstractType
                 'label' => 'SKU du produit',
                 'help' => 'La référence du dossier lié sera ajoutée automatiquement au SKU'
             ])
-            ->add('options', CollectionType::class, [
+            ->add('options', EntityType::class, [
                 'label' => 'Options du produit',
-                'entry_type' => OptionType::class,
-                'entry_options' => ['label' => false],
-                'allow_add' => true
+                'class' => Option::class,
+                'required' => true,
+                'multiple' => true
             ])
             ->add('picture_1', FileType::class, [
                 'label' => 'Image 1 du produit',

@@ -41,6 +41,7 @@ class NorlogFolderController extends AbstractController
                 $sku->setFolder($norlogFolder);
                 $sku->setSKU($norlogFolder->getNorlogReference().'-'.$sku->getSKU());
             }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($norlogFolder);
             $entityManager->flush();
