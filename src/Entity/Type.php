@@ -36,7 +36,6 @@ class Type
 
     public function __construct()
     {
-        $this->relation = new ArrayCollection();
         $this->options = new ArrayCollection();
     }
 
@@ -82,7 +81,7 @@ class Type
 
     public function removeValue(Value $value): self
     {
-        if ($this->relations->removeElement($value)) {
+        if ($this->values->removeElement($value)) {
             // set the owning side to null (unless already changed)
             if ($value->getType() === $this) {
                 $value->setType(null);
