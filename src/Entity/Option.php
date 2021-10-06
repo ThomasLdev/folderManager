@@ -11,7 +11,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=OptionRepository::class)
  * @ORM\Table(name="`option`")
- * @UniqueEntity("type")
  * @UniqueEntity("value")
  */
 class Option

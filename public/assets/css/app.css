@@ -34,7 +34,13 @@ body {
     width: 130px;
     font-size: 1rem;
 }
+/**
+INDEX SCREEN - END
+ */
 
+/**
+FORM SCREEN - START
+ */
 .sku-form {
     width: 100%;
 }
@@ -45,7 +51,12 @@ body {
     text-transform: uppercase;
 }
 .sku-bloc {
+    position: relative;
     margin: 30px 0;
+}
+.sku-bloc input {
+    height: 50px;
+    padding: 20px;
 }
 .option-control {
     height: 170px;
@@ -70,6 +81,16 @@ body {
 .help-text {
     font-size: 13px;
 }
+.btn-sku-remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0;
+    width: 50px;
+}
+.btn-folder {
+    width: 150px;
+}
 /**
-INDEX SCREEN - END
+FORM SCREEN - END
  */

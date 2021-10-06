@@ -2,9 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Option;
 use App\Entity\Sku;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -25,6 +23,7 @@ class SkuType extends AbstractType
                 'entry_type' => OptionType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
+	            'prototype' => 'options'
             ])
             ->add('picture_1', FileType::class, [
                 'label' => 'Image 1 du produit',

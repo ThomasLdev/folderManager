@@ -39,7 +39,7 @@ class Type
         $this->options = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }

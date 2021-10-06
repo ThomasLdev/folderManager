@@ -13,69 +13,71 @@
     }) }}
 </div>
 
-<div class="form-group sku-row skus" data-prototype="{{ form_widget(form.skus.vars.prototype)|e('html_attr') }}">
-    {% if form.skus %}
-        {% for sku in form.skus %}
-            <div class="row sku-bloc bg-light">
-                <div class="field-title">
-                    <p class="display-3 text-center">Produit #{{ loop.index }}</p>
-                </div>
-                <span class="btn btn-secondary form-extend-btn">Voir</span>
-                <div class="col-12 sku-fields-bloc">
-                    <div class="form-control">
-                        {{ form_row(sku.SKU, {
-                            attr: {
-                                placeholder: 'ex: XVF-25663',
-                                class: 'sku-form-input'
-                            }
-                        }) }}
-                    </div>
-                    <div class="form-control option-control">
-                        {{ form_row(sku.options, {
-                            attr: {
-                                placeholder: 'Options du produit',
-                                class: 'sku-form-input p-2 p-2'
-                            }
-                        }) }}
-                    </div>
-
-                    <div class="form-control">
-                        {{ form_row(sku.picture_1, {
-                            attr: {
-                                placeholder: 'Image 1',
-                                class: 'sku-form-input'
-                            }
-                        }) }}
-                    </div>
-                    <div class="form-control">
-                        {{ form_row(sku.picture_2, {
-                            attr: {
-                                placeholder: 'Image 2',
-                                class: 'sku-form-input'
-                            }
-                        }) }}
-                    </div>
-                </div>
+<div class="form-group sku-row {#skus#}" {#data-prototype="{{ form_widget(form.skus.vars.prototype)|e('html_attr') }}"#}>
+    {% for sku in form.skus %}
+        <div class="row sku-bloc bg-light">
+            <div class="field-title">
+                <p class="display-3 text-center">Produit #{{ loop.index }}</p>
             </div>
-        {% endfor %}
-    {% else %}
-        <div class="row">
-            <div class="col-12">
-                Pas encore de Sku lié au colis
+            <span class="btn btn-secondary form-extend-btn">Voir</span>
+            <div class="col-12 sku-fields-bloc">
+                <div class="form-control">
+                    {{ form_row(sku.SKU, {
+                        attr: {
+                            placeholder: 'ex: XVF-25663',
+                            class: 'sku-form-input'
+                        }
+                    }) }}
+                </div>
+                <div class="form-control" {#data-prototype-options="{{ form_widget(form.skus.vars.prototype.children['options'].vars.prototype)|e('html_attr') }}"#}>
+                    {{ form_row(sku.options, {
+                        attr: {
+                            placeholder: 'Options du produit',
+                            class: 'sku-form-input p-2 p-2'
+                        }
+                    }) }}
+                    <hr>
+                    <a href="#">Ajouter une option</a>
+                </div>
+                <div class="form-control">
+                    {{ form_row(sku.picture_1, {
+                        attr: {
+                            placeholder: 'Image 1',
+                            class: 'sku-form-input'
+                        }
+                    }) }}
+                </div>
+                <div class="form-control">
+                    {{ form_row(sku.picture_2, {
+                        attr: {
+                            placeholder: 'Image 2',
+                            class: 'sku-form-input'
+                        }
+                    }) }}
+                </div>
             </div>
         </div>
-    {% endif %}
+    {% endfor %}
 </div>
 
-<div class="container form-actions d-flex justify-content-center align-items-center flex-wrap w-100">
+{#
+    The deepest level must be on top or you'll get a <br>
+    The prototype process leaves in app.js and is used to generate as many inputs as you want and save them as arrayCollections as usual
+#}
+<div id="folder-prototypes" class="folder-bloc"
+     data-prototype-options="{{ form_widget(form.skus.vars.prototype.children['options'].vars.prototype)|e('html_attr') }}"
+     data-prototype-skus="{{ form_widget(form.skus.vars.prototype)|e('html_attr') }}">
+</div>
+
+<div class="container form-actions d-flex justify-content-center align-items-center flex-wrap w-100 mt-5 mb-5">
     <div class="row">
         <div class="col-6">
-            <button type="button" class="btn btn-primary add_item_link" data-collection-holder-class="skus">
-                Ajouter SKU
+            <button type="button" class="btn btn-primary add_item_link btn-folder" data-collection-holder-class="folder-bloc">
+                Ajouter Produit
             </button>
         </div>
         <div class="col-6">
-            <button type="submit" class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+            <button type="submit" class="btn btn-primary btn-folder">{{ button_label|default('Enregistrer') }}</button>
         </div>
     </div>
 </div>

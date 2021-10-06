@@ -5,18 +5,18 @@ let newPage = document.getElementsByClassName("newSku");
 if (editPage.length !== 0 || newPage.length !== 0) {
     $(document).ready(function () {
         // Get the div that holds the collection of tags
-        let skusDiv = $('div.skus');
+        let folderBloc = $('#folder-prototypes');
         // count the current form inputs we have (e.g. 2), use that as the new
         // index when inserting a new item (e.g. 2)
-        skusDiv.data('index', skusDiv.find('input').length);
-        // on click on add image or add video (current target)
+        // on click on add sku (current target)
         $('body').on('click', '.add_item_link', function (e) {
             let $collectionHolderClass = $(e.currentTarget).data('collectionHolderClass');
+            console.log($collectionHolderClass);
             // add a new tag form (see next code block)
             addFormToCollection($collectionHolderClass);
         })
         // add a delete link to all of the existing skus
-        skusDiv.find('div.sku-bloc').each(function () {
+        folderBloc.find('div.sku-bloc').each(function () {
             addTagFormDeleteLink($(this));
         });
 
@@ -38,28 +38,39 @@ if (editPage.length !== 0 || newPage.length !== 0) {
     function addFormToCollection($collectionHolderClass) {
         // Get the div that holds the collection of tags
         let $collectionHolder = $('.' + $collectionHolderClass);
+        console.log($collectionHolder);
+
         // Get the data-prototype explained earlier
-        let prototype = $collectionHolder.data('prototype');
-        console.log(prototype);
+        let prototypeSku = $collectionHolder.data('prototype-skus');
+        let prototypeOption = $collectionHolder.data('prototype-options');
+        console.log(prototypeSku);
+        console.log(prototypeOption);
+
         // get the new index
         let index = $collectionHolder.data('index');
-        let newForm = prototype;
+        let newForm = prototypeSku + prototypeOption;
+
         // You need this only if you didn't set 'label' => false in your tags field in TaskType
         // Replace '__name__label__' in the prototype's HTML to
         // instead be a number based on how many items we have
         // newForm = newForm.replace(/__name__label__/g, index);
         // Replace '__name__' in the prototype's HTML to
         // instead be a number based on how many items we have
+
         newForm = newForm.replace(/__name__/g, index);
+
         // increase the index with one for the next item
         $collectionHolder.data('index', index + 1);
+
         // Display the form in the page in an li, before the "Add a tag" link li
-        let $newFormDiv = $('<div class="row sku-bloc bg-light"></div>').append(newForm);
+        let $newFormDiv = $('<div class="row sku-bloc bg-light p-3"></div>').append(newForm);
+
         // Add the new form at the end of the list
         $collectionHolder.append($newFormDiv)
         let $tagFormDiv = $newFormDiv;
-        let $removeFormButton = $('<button class="btn bg-danger" type="button"><i class="fas fa-trash-alt"></i></button>');
+        let $removeFormButton = $('<button class="btn bg-danger btn-sku-remove" type="button"><i class="fas fa-trash-alt"></i></button>');
         $tagFormDiv.append($removeFormButton);
+
         $removeFormButton.on('click', function () {
             // remove the li for the tag form
             $tagFormDiv.remove();
