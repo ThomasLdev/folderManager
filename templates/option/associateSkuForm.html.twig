@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+    <div class="container">
+
+        <h1 class="display-3 text-center p-3">Ajouter une option au produit</h1>
+
+        <div class="row">
+            <div class="col-12">
+                <form method="post">
+                    <div class="form-group">
+                        <label class="w-100" for="type">
+                            <select name="type" class="form-control" style="height: 80px">
+                                {% for type in types %}
+                                    <option value="{{ type.name }}">{{ type.name }}</option>
+                                {%  endfor %}
+                            </select>
+                        </label>
+                    </div>
+                    <div class="form-group mt-4">
+                        <label class="w-100" for="value">
+                            <select name="value" class="form-control" style="height: 80px">
+                                {% for value in values %}
+                                    <option value="{{ value.name }}">{{ value.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                    </div>
+                    <button class="btn btn-primary btn-folder mt-4" type="submit">Ajouter option</button>
+                    <a href="{{ path('folder_edit', {id: folderId}) }}" class="btn btn-danger btn-folder mt-4" >Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // NE CHARGER QUE LES VALUES DU TYPE EN AJAX
+    </script>
+{% endblock %}
+

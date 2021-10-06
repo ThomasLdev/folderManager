@@ -57,12 +57,12 @@ class Sku
     /**
      * @ORM\ManyToOne(targetEntity=NorlogFolder::class, inversedBy="skus")
      */
-    private ?\App\Entity\NorlogFolder $folder;
+    private ?NorlogFolder $folder;
 
     public function __construct()
     {
         $this->options = new ArrayCollection();
-        $this->folders = new ArrayCollection();
+//        $this->folders = new ArrayCollection();
         $this->exported = false;
         $this->createdAt = new DateTime();
     }
@@ -167,8 +167,4 @@ class Sku
 
         return $this;
     }
-//    public function __toString()
-//    {
-//        return $this->getSKU();
-//    }
 }

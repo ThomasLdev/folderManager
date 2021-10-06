@@ -55,11 +55,17 @@ class NorlogFolderController extends AbstractController
     }
 
     /**
-     * @Route("/dissociateSku/{id}", name="folder_delete")
+     * @Route("/dissociateSku/{id}", name="folder_delete_sku")
      */
     public function dissociateSku(Request $request, NorlogFolder $norlogFolder, SkuRepository $skuRepository): Response
     {
-        //TODO
+        $skuToRemove = $skuRepository->find($request->get('skuId'));
+		$norlogFolder->removeSku($skuToRemove);
+
+	    $entityManager = $this->getDoctrine()->getManager();
+	    $entityManager->flush();
+
+		return $this->redirectToRoute('folder_edit', ['id' => $norlogFolder->getId()]);
     }
 
     /**
@@ -70,20 +76,9 @@ class NorlogFolderController extends AbstractController
         $form = $this->createForm(NorlogFolderType::class, $norlogFolder);
         $form->handleRequest($request);
 
-        $folderSkus = $norlogFolder->getSkus();
-
         if ($form->isSubmitted() && $form->isValid()) {
 
             $norlogFolder = $form->getData();
-
-            foreach ($norlogFolder->getSkus() as $sku) {
-                $sku->setFolder($norlogFolder);
-                $sku->setSKU($norlogFolder->getNorlogReference().'-'.$sku->getSKU());
-            }
-            
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($norlogFolder);
-            $entityManager->flush();
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($norlogFolder);
@@ -93,9 +88,8 @@ class NorlogFolderController extends AbstractController
         }
 
         return $this->render('folder/edit.html.twig', [
-            'norlogFolder'    => $norlogFolder,
-            'skus'      => $folderSkus,
-            'form'      => $form->createView()
+            'folderId'      => $norlogFolder->getId(),
+            'form'          => $form->createView()
         ]);
     }
 }
