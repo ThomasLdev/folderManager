@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Norlog Folder Manager{% endblock %}
+{% block title %}Norlog - Folder Manager{% endblock %}
+
+{% block nav %}
+{% endblock %}
 
 {% block body %}
     <div class="container-fluid h-100 pt-4">
@@ -10,11 +13,6 @@
                 <div class="form-group h-100 form-app-index">
                     <form action="{{ path('sku_search') }}" method="post">
                         <div class="input-group p-4">
-                            {% if error %}
-                                <script>
-                                    window.alert("{{ error }}")
-                                </script>
-                            {% endif %}
                             <label>
                                 <input type="text" name="norlogReference" class="form-control p-4 input-app-index"
                                        placeholder="Référence du dossier">
@@ -39,7 +37,7 @@
                 </div>
                 <div class="row p-3 app-action-row">
                     <div class="col-12 d-flex justify-content-evenly align-items-center">
-                        <a href="{{ path('option_list') }}" class="btn btn-primary app-btn-bloc">Gérer Options</a>
+                        <a href="{{ path('app_options') }}" class="btn btn-primary app-btn-bloc">Gérer Options</a>
                     </div>
                 </div>
             </div>

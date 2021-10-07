@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\NorlogFolder;
+use App\Entity\Sku;
 use App\Form\NorlogFolderType;
+use App\Repository\MarqueRepository;
 use App\Repository\NorlogFolderRepository;
 use App\Repository\SkuRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,10 +22,16 @@ class NorlogFolderController extends AbstractController
     /**
      * @Route("/list", name="folder_list")
      */
-    public function list(NorlogFolderRepository $folderRepository): Response
+    public function list(NorlogFolderRepository $folderRepository, PaginatorInterface $paginator, Request $request): Response
     {
+		$norlogFolders = $paginator->paginate(
+			$folderRepository->findAll(),
+			$request->query->getInt('page', 1),
+			10
+		);
+
         return $this->render('folder/index.html.twig', [
-            'norlogFolders' => $folderRepository->findAll(),
+            'norlogFolders' => $norlogFolders
         ]);
     }
 
@@ -31,17 +40,20 @@ class NorlogFolderController extends AbstractController
      */
     public function new(Request $request): Response
     {
+	    $entityManager = $this->getDoctrine()->getManager();
+
         $norlogFolder = new NorlogFolder();
 
         $form = $this->createForm(NorlogFolderType::class, $norlogFolder);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             foreach ($norlogFolder->getSkus() as $sku) {
                 $sku->setFolder($norlogFolder);
                 $sku->setSKU($norlogFolder->getNorlogReference().'-'.$sku->getSKU());
             }
-            $entityManager = $this->getDoctrine()->getManager();
+
             $entityManager->persist($norlogFolder);
             $entityManager->flush();
 
@@ -54,11 +66,20 @@ class NorlogFolderController extends AbstractController
     }
 
     /**
-     * @Route("/dissociateSku/{id}", name="folder_delete")
+     * @Route("/dissociateSku/{id}", name="folder_delete_sku")
+     * Takes the folder id in params converter
      */
     public function dissociateSku(Request $request, NorlogFolder $norlogFolder, SkuRepository $skuRepository): Response
     {
-        //TODO
+        $skuToRemove = $skuRepository->find($request->get('skuId'));
+
+		if ($skuToRemove) {
+			$norlogFolder->removeSku($skuToRemove);
+			$entityManager = $this->getDoctrine()->getManager();
+			$entityManager->flush();
+		}
+
+		return $this->redirectToRoute('folder_edit', ['id' => $norlogFolder->getId()]);
     }
 
     /**
@@ -69,20 +90,13 @@ class NorlogFolderController extends AbstractController
         $form = $this->createForm(NorlogFolderType::class, $norlogFolder);
         $form->handleRequest($request);
 
-        $folderSkus = $norlogFolder->getSkus();
-
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $norlogFolder = $form->getData();
+	        foreach ($norlogFolder->getSkus() as $sku) {
+		        $sku->setFolder($norlogFolder);
+	        }
 
-            foreach ($norlogFolder->getSkus() as $sku) {
-                $sku->setFolder($norlogFolder);
-                $sku->setSKU($norlogFolder->getNorlogReference().'-'.$sku->getSKU());
-            }
-            
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($norlogFolder);
-            $entityManager->flush();
+            $norlogFolder = $form->getData();
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($norlogFolder);
@@ -92,9 +106,8 @@ class NorlogFolderController extends AbstractController
         }
 
         return $this->render('folder/edit.html.twig', [
-            'norlogFolder'    => $norlogFolder,
-            'skus'      => $folderSkus,
-            'form'      => $form->createView()
+            'folderId'      => $norlogFolder->getId(),
+            'form'          => $form->createView()
         ]);
     }
 }

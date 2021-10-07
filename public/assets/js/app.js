@@ -4,7 +4,7 @@ let newPage = document.getElementsByClassName("newSku");
 
 if (editPage.length !== 0 || newPage.length !== 0) {
     $(document).ready(function () {
-        // Get the div that holds the collection of tags
+        /// Get the div that holds the collection of tags
         let skusDiv = $('div.skus');
         // count the current form inputs we have (e.g. 2), use that as the new
         // index when inserting a new item (e.g. 2)
@@ -16,13 +16,13 @@ if (editPage.length !== 0 || newPage.length !== 0) {
             addFormToCollection($collectionHolderClass);
         })
         // add a delete link to all of the existing skus
-        skusDiv.find('div.sku-bloc').each(function () {
-            addTagFormDeleteLink($(this));
-        });
+        // skusDiv.find('div.sku-bloc').each(function () {
+        //     addTagFormDeleteLink($(this));
+        // });
 
         // Toggle products
         let clicked = 0;
-        $('.form-extend-btn').click(function(){
+        $('.form-extend-btn').click(function () {
             if (clicked === 0) {
                 $(this).parent().find('.sku-fields-bloc').toggleClass('active');
                 clicked = 1;
@@ -33,6 +33,18 @@ if (editPage.length !== 0 || newPage.length !== 0) {
                 clicked = 0;
             }
         });
+
+        // IF BLOC-NEW AND CLIC ON HOME, WARN THAT SKU WILL NOT BE SAVED
+        let navBtns = document.querySelectorAll('.btn-top');
+        navBtns.forEach(function (item) {
+            item.addEventListener('click', function (e) {
+                let newBloc = document.querySelectorAll('.bloc-new');
+                if (newBloc.length > 0) {
+                    e.preventDefault();
+                    alert('Attention, votre SKU n\'est pas sauvegardé');
+                }
+            });
+        });
     });
 
     function addFormToCollection($collectionHolderClass) {
@@ -40,7 +52,6 @@ if (editPage.length !== 0 || newPage.length !== 0) {
         let $collectionHolder = $('.' + $collectionHolderClass);
         // Get the data-prototype explained earlier
         let prototype = $collectionHolder.data('prototype');
-        console.log(prototype);
         // get the new index
         let index = $collectionHolder.data('index');
         let newForm = prototype;
@@ -54,11 +65,11 @@ if (editPage.length !== 0 || newPage.length !== 0) {
         // increase the index with one for the next item
         $collectionHolder.data('index', index + 1);
         // Display the form in the page in an li, before the "Add a tag" link li
-        let $newFormDiv = $('<div class="row sku-bloc bg-light"></div>').append(newForm);
+        let $newFormDiv = $('<div class="row sku-bloc bloc-new bg-light"></div>').append(newForm);
         // Add the new form at the end of the list
         $collectionHolder.append($newFormDiv)
         let $tagFormDiv = $newFormDiv;
-        let $removeFormButton = $('<button class="btn bg-danger" type="button"><i class="fas fa-trash-alt"></i></button>');
+        let $removeFormButton = $('<button class="btn bg-danger btn-sku-remove" type="button"><i class="fas fa-trash-alt"></i></button>');
         $tagFormDiv.append($removeFormButton);
         $removeFormButton.on('click', function () {
             // remove the li for the tag form
@@ -67,7 +78,7 @@ if (editPage.length !== 0 || newPage.length !== 0) {
     }
 
     function addTagFormDeleteLink($skuFormDiv) {
-        let $removeFormButton = $('<button class="btn bg-danger" type="button"><i class="fas fa-trash-alt"></i></button>');
+        let $removeFormButton = $('<button class="btn bg-danger btn-sku-remove" type="button"><i class="fas fa-trash-alt"></i></button>');
         $skuFormDiv.append($removeFormButton);
 
         $removeFormButton.on('click', function () {

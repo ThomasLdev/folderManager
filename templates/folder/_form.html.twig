@@ -14,11 +14,13 @@
 </div>
 
 <div class="form-group sku-row skus" data-prototype="{{ form_widget(form.skus.vars.prototype)|e('html_attr') }}">
-    {% if form.skus %}
+    {% if form.skus|length > 0 %}
         {% for sku in form.skus %}
             <div class="row sku-bloc bg-light">
                 <div class="field-title">
                     <p class="display-3 text-center">Produit #{{ loop.index }}</p>
+                    <a href="{{ path('folder_delete_sku', {id: folderId, skuId: sku.vars.data.id}) }}"
+                       class="btn bg-danger btn-sku-remove"><i class="fas fa-trash-alt"></i></a>
                 </div>
                 <span class="btn btn-secondary form-extend-btn">Voir</span>
                 <div class="col-12 sku-fields-bloc">
@@ -30,13 +32,51 @@
                             }
                         }) }}
                     </div>
-                    <div class="form-control option-control">
-                        {{ form_row(sku.options, {
-                            attr: {
-                                placeholder: 'Options du produit',
-                                class: 'sku-form-input p-2 p-2'
-                            }
-                        }) }}
+
+                    <div class="container">
+                        <div class="row">
+                            {{ form_label(sku.marque) }}
+                            {{ form_widget(sku.marque, {
+                                attr: {
+                                    class: 'sku-form-input'
+                                }
+                            }) }}
+
+                            {{ form_label(sku.taille) }}
+                            {{ form_widget(sku.taille, {
+                                attr: {
+                                    class: 'sku-form-input'
+                                }
+                            }) }}
+
+                            {{ form_label(sku.designation) }}
+                            {{ form_widget(sku.designation, {
+                                attr: {
+                                    class: 'sku-form-input'
+                                }
+                            }) }}
+
+                            {{ form_label(sku.couleur) }}
+                            {{ form_widget(sku.couleur, {
+                                attr: {
+                                    class: 'sku-form-input'
+                                }
+                            }) }}
+
+                            {{ form_label(sku.etat) }}
+                            {{ form_widget(sku.etat, {
+                                attr: {
+                                    class: 'sku-form-input'
+                                }
+                            }) }}
+
+                            {{ form_label(sku.composition) }}
+                            {{ form_widget(sku.composition, {
+                                attr: {
+                                    class: 'sku-form-input'
+                                }
+                            }) }}
+                        </div>
                     </div>
 
                     <div class="form-control">
@@ -60,23 +100,23 @@
         {% endfor %}
     {% else %}
         <div class="row">
-            <div class="col-12">
-                Pas encore de Sku lié au colis
+            <div class="col-12 mt-4">
+                <p class="p-3 bg-info">Pas encore de {{ form_label(form.skus) }} ajoutés</p>
+                {{ form_widget(form.skus) }}
             </div>
         </div>
     {% endif %}
 </div>
 
-<div class="container form-actions d-flex justify-content-center align-items-center flex-wrap w-100">
-    <div class="row">
-        <div class="col-6">
-            <button type="button" class="btn btn-primary add_item_link" data-collection-holder-class="skus">
-                Ajouter SKU
-            </button>
-        </div>
-        <div class="col-6">
-            <button type="submit" class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
-        </div>
+<div class="row">
+    <div class="col-12">
+        <button type="button" class="btn btn-primary btn-nav w-100 mt-2 mb-2 add_item_link"
+                data-collection-holder-class="skus">
+            Ajouter Sku
+        </button>
+        <button type="submit"
+                class="btn btn-success btn-nav w-100 mt-2 mb-2">{{ button_label|default('Enregistrer') }}</button>
     </div>
 </div>
+
 {{ form_end(form) }}

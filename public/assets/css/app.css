@@ -4,72 +4,167 @@ INDEX SCREEN - START
 html {
     height: 100vh;
 }
+
 body {
     height: 100%;
 }
+
 .app-title {
     font-size: 11rem;
 }
+
 .app-btn-bloc {
     font-size: 2.5rem;
     width: 350px;
     padding: 20px;
     margin: 10px;
 }
+
 .app-action-row {
 }
+
 .form-app-index {
     padding: 30px;
 }
+
 .input-app-index {
-    font-size: 3rem;
+    font-size: 2rem;
 }
+
 .btn-app-index {
     font-size: 2rem;
 }
+
 .app-index-label {
     font-size: 2rem;
 }
+
 .btn-nav {
     width: 130px;
-    font-size: 1rem;
+    font-size: 1.5rem;
 }
 
+/**
+INDEX SCREEN - END
+ */
+
+/**
+FORM SCREEN - START
+ */
 .sku-form {
     width: 100%;
 }
+
 .sku-form-input {
     width: 100%;
-    height: 60px;
     text-align: center;
     text-transform: uppercase;
+    height: 50px;
 }
+
 .sku-bloc {
+    position: relative;
     margin: 30px 0;
 }
-.option-control {
-    height: 170px;
+
+.sku-bloc input {
+    height: 50px;
+    padding: 20px;
 }
+
 .sku-fields-bloc {
     display: none;
 }
+
 .sku-fields-bloc.active {
     display: block;
 }
+
 .field-title {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .delete-field {
     position: absolute;
     top: 5px;
     left: 5px;
 }
+
 .help-text {
     font-size: 13px;
 }
+
+.btn-sku-remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0;
+    width: 100px;
+    height: 84px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-sku-remove:hover {
+    background-color: lightgrey !important;
+}
+
+.btn-folder {
+    width: 150px;
+}
+
+.option-table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+    margin: auto;
+}
+
+.option-td, .option-th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.option-row:nth-child(even) {
+    background-color: lightgrey;
+}
+
+table td, table th {
+    vertical-align: middle;
+    font-size: 1.5rem;
+}
+
+.btn-xl {
+    padding: 1.5rem 2rem;
+    font-size: 1.25rem;
+    border-radius: .3rem;
+}
+.navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.page-link {
+    padding: 1.375rem 1.75rem;
+}
+.page-link {
+    font-size: 1.5rem;
+}
+
+.bloc-new > div:first-child > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.bloc-new select {
+    height: 50px;
+}
+
 /**
-INDEX SCREEN - END
+FORM SCREEN - END
  */
