@@ -5,14 +5,6 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12 d-flex justify-content-around align-items-center p-3">
-                <a href="{{ path('app_index') }}" class="btn btn-primary display-3">Accueil</a>
-                <h1 class="display-2">Nouveau SKU</h1>
-                <a href="{{ path('option_list') }}" class="btn btn-primary display-3">Gérer Options</a>
-            </div>
-        </div>
-        <hr style="height: 2px">
-        <div class="row">
             {% if not form.vars.valid %}
                     {% for child in form.children %}
                         {%for error in child.vars.errors%}

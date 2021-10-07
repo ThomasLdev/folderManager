@@ -17,154 +17,230 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sku
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @ORM\Id
+	 * @ORM\GeneratedValue
+	 * @ORM\Column(type="integer")
+	 */
+	private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private ?string $SKU;
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private ?string $SKU;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private ?string $picture_1 = '';
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private ?string $picture_1 = '';
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private ?string $picture_2 = '';
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private ?string $picture_2 = '';
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private DateTime $createdAt;
+	/**
+	 * @ORM\Column(type="datetime")
+	 */
+	private DateTime $createdAt;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private bool $exported;
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private bool $exported;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Option::class, inversedBy="skus", cascade={"persist"})
-     */
-    private $options;
+	/**
+	 * @ORM\ManyToOne(targetEntity=NorlogFolder::class, inversedBy="skus")
+	 */
+	private ?NorlogFolder $folder;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=NorlogFolder::class, inversedBy="skus")
-     */
-    private ?NorlogFolder $folder;
+	/**
+	 * @ORM\ManyToOne(targetEntity=Marque::class, inversedBy="skus")
+	 */
+	private ?Marque $marque;
 
-    public function __construct()
-    {
-        $this->options = new ArrayCollection();
-//        $this->folders = new ArrayCollection();
-        $this->exported = false;
-        $this->createdAt = new DateTime();
-    }
+	/**
+	 * @ORM\ManyToOne(targetEntity=Taille::class, inversedBy="skus")
+	 */
+	private ?Taille $taille;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+	/**
+	 * @ORM\ManyToOne(targetEntity=Composition::class, inversedBy="skus")
+	 */
+	private ?Composition $composition;
 
-    public function getSKU(): ?string
-    {
-        return $this->SKU;
-    }
+	/**
+	 * @ORM\ManyToOne(targetEntity=Couleur::class, inversedBy="skus")
+	 */
+	private ?Couleur $couleur;
 
-    public function setSKU(string $SKU): self
-    {
-        $this->SKU = $SKU;
+	/**
+	 * @ORM\ManyToOne(targetEntity=Designation::class, inversedBy="skus")
+	 */
+	private ?Designation $designation;
 
-        return $this;
-    }
+	/**
+	 * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="skus")
+	 */
+	private ?Etat $etat;
 
-    public function getPicture1(): ?string
-    {
-        return $this->picture_1;
-    }
+	public function __construct()
+	{
+		$this->exported = false;
+		$this->createdAt = new DateTime();
+	}
 
-    public function setPicture1(string $picture_1): self
-    {
-        $this->picture_1 = $picture_1;
+	public function getId(): ?int
+	{
+		return $this->id;
+	}
 
-        return $this;
-    }
+	public function getSKU(): ?string
+	{
+		return $this->SKU;
+	}
 
-    public function getPicture2(): ?string
-    {
-        return $this->picture_2;
-    }
+	public function setSKU(string $SKU): self
+	{
+		$this->SKU = $SKU;
 
-    public function setPicture2(string $picture_2): self
-    {
-        $this->picture_2 = $picture_2;
+		return $this;
+	}
 
-        return $this;
-    }
+	public function getPicture1(): ?string
+	{
+		return $this->picture_1;
+	}
 
-    public function getCreatedAt(): ?DateTime
-    {
-        return $this->createdAt;
-    }
+	public function setPicture1(string $picture_1): self
+	{
+		$this->picture_1 = $picture_1;
 
-    public function setCreatedAt(DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
+		return $this;
+	}
 
-        return $this;
-    }
+	public function getPicture2(): ?string
+	{
+		return $this->picture_2;
+	}
 
-    public function getExported(): ?bool
-    {
-        return $this->exported;
-    }
+	public function setPicture2(string $picture_2): self
+	{
+		$this->picture_2 = $picture_2;
 
-    public function setExported(bool $exported): self
-    {
-        $this->exported = $exported;
+		return $this;
+	}
 
-        return $this;
-    }
+	public function getCreatedAt(): ?DateTime
+	{
+		return $this->createdAt;
+	}
 
-    /**
-     * @return Collection|Option[]
-     */
-    public function getOptions(): Collection
-    {
-        return $this->options;
-    }
+	public function setCreatedAt(DateTime $createdAt): self
+	{
+		$this->createdAt = $createdAt;
 
-    public function addOption(Option $option): self
-    {
-        if (!$this->options->contains($option)) {
-            $this->options[] = $option;
-        }
+		return $this;
+	}
 
-        return $this;
-    }
+	public function getExported(): ?bool
+	{
+		return $this->exported;
+	}
 
-    public function removeOption(Option $option): self
-    {
-        $this->options->removeElement($option);
+	public function setExported(bool $exported): self
+	{
+		$this->exported = $exported;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function getFolder(): ?NorlogFolder
-    {
-        return $this->folder;
-    }
+	public function getFolder(): ?NorlogFolder
+	{
+		return $this->folder;
+	}
 
-    public function setFolder(?NorlogFolder $folder): self
-    {
-        $this->folder = $folder;
+	public function setFolder(?NorlogFolder $folder): self
+	{
+		$this->folder = $folder;
 
-        return $this;
-    }
+		return $this;
+	}
+
+	public function getMarque(): ?Marque
+	{
+		return $this->marque;
+	}
+
+	public function setMarque(?Marque $marque): self
+	{
+		$this->marque = $marque;
+
+		return $this;
+	}
+
+	public function getTaille(): ?Taille
+	{
+		return $this->taille;
+	}
+
+	public function setTaille(?Taille $taille): self
+	{
+		$this->taille = $taille;
+
+		return $this;
+	}
+
+	public function getComposition(): ?Composition
+	{
+		return $this->composition;
+	}
+
+	public function setComposition(?Composition $composition): self
+	{
+		$this->composition = $composition;
+
+		return $this;
+	}
+
+	public function getCouleur(): ?Couleur
+	{
+		return $this->couleur;
+	}
+
+	public function setCouleur(?Couleur $couleur): self
+	{
+		$this->couleur = $couleur;
+
+		return $this;
+	}
+
+	public function getDesignation(): ?Designation
+	{
+		return $this->designation;
+	}
+
+	public function setDesignation(?Designation $designation): self
+	{
+		$this->designation = $designation;
+
+		return $this;
+	}
+
+	public function getEtat(): ?Etat
+	{
+		return $this->etat;
+	}
+
+	public function setEtat(?Etat $etat): self
+	{
+		$this->etat = $etat;
+
+		return $this;
+	}
+
+	public function __toString()
+	{
+		return $this->getSKU();
+	}
 }

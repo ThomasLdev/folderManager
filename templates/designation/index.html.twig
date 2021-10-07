@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Designation index{% endblock %}
+
+{% block body %}
+    <h1>Designation index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for designation in designations %}
+            <tr>
+                <td>{{ designation.id }}</td>
+                <td>{{ designation.name }}</td>
+                <td>
+                    <a href="{{ path('designation_show', {'id': designation.id}) }}">show</a>
+                    <a href="{{ path('designation_edit', {'id': designation.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('designation_new') }}">Create new</a>
+{% endblock %}

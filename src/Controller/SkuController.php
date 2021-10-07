@@ -9,6 +9,7 @@ use App\Form\OptionType;
 use App\Repository\SkuRepository;
 use App\Repository\NorlogFolderRepository;
 use App\Repository\OptionRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -131,10 +132,15 @@ class SkuController extends AbstractController
     /**
      * @Route("/list", name="sku_list", methods={"GET"})
      */
-    public function SkuList(SkuRepository $SkuRepository): Response
+    public function SkuList(SkuRepository $SkuRepository, PaginatorInterface $paginator, Request $request): Response
     {
+		$skus = $paginator->paginate(
+			$SkuRepository->findAll(),
+			$request->query->getInt('page', 1),
+			20
+		);
         return $this->render('sku/index.html.twig', [
-            'skus' => $SkuRepository->findAll(),
+            'skus' => $skus,
         ]);
     }
 

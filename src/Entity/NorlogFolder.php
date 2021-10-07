@@ -15,18 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NorlogFolder
 {
-    public function __construct()
-    {
-        $this->createdAt = new DateTime();
-        $this->skus = new ArrayCollection();
-    }
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -48,6 +42,12 @@ class NorlogFolder
      * @ORM\OneToMany(targetEntity=Sku::class, mappedBy="folder", cascade={"persist", "remove"})
      */
     private $skus;
+
+	public function __construct()
+	{
+		$this->createdAt = new DateTime();
+		$this->skus = new ArrayCollection();
+	}
 
     public function getId(): ?int
     {

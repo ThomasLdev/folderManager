@@ -4,23 +4,14 @@
 
 {% block bodyClass %}newSku{% endblock %}
 
+{% block pageName%}Créer un dossier{% endblock%}
+
 {% block body %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12 d-flex justify-content-around align-items-center p-3">
-            <a href="{{ path('app_index') }}" class="btn btn-primary display-3 btn-nav">Accueil</a>
-            <h1 class="display-2">Créer un dossier</h1>
-            <a href="{{ path('option_list') }}" class="btn btn-primary display-3 btn-nav">Gérer Options</a>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 d-flex flex-column justify-content-center align-items-center">
+                {{ include('folder/_form.html.twig') }}
+            </div>
         </div>
     </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="col-12 d-flex flex-column justify-content-center align-items-center">
-            {{ include('folder/_form.html.twig') }}
-        </div>
-    </div>
-</div>
-
 {% endblock %}

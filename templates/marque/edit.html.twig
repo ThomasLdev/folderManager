@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edition de marque{% endblock %}
+
+{% block pageName %}Edition de marque{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                {{ include('marque/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

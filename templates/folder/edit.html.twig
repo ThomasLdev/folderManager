@@ -2,23 +2,16 @@
 
 {% block bodyClass %}editSku{% endblock %}
 
+{% block title %}Editer un dossier{% endblock %}
+
+{% block pageName%}Editer un dossier{% endblock%}
+
 {% block body %}
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 d-flex justify-content-around align-items-center p-3">
-                <a href="{{ path('app_index') }}" class="btn btn-primary display-3 btn-nav">Accueil</a>
-                <h1 class="display-2">Editer un dossier</h1>
-                <a href="{{ path('option_list') }}" class="btn btn-primary display-3 btn-nav">Gérer Options</a>
-            </div>
-        </div>
-
-        <hr style="height: 2px">
-
         <div class="row">
             <div class="col-12 d-flex flex-column justify-content-center align-items-center">
                 {{ include('folder/_form.html.twig') }}
             </div>
         </div>
     </div>
-
 {% endblock %}

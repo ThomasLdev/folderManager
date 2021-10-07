@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Designation{% endblock %}
+
+{% block body %}
+    <h1>Edit Designation</h1>
+
+    {{ include('designation/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('designation_index') }}">back to list</a>
+
+    {{ include('designation/_delete_form.html.twig') }}
+{% endblock %}

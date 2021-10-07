@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Designation{% endblock %}
+
+{% block body %}
+    <h1>Create new Designation</h1>
+
+    {{ include('designation/_form.html.twig') }}
+
+    <a href="{{ path('designation_index') }}">back to list</a>
+{% endblock %}

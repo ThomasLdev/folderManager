@@ -1,21 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dossiers Créés{% endblock %}
+{% block title %}Liste des dossiers{% endblock %}
+
+{% block pageName%}Liste des dossiers{% endblock%}
 
 {% block body %}
     <div class="container-fluid">
-        {# <a href="{{ path('sku_index') }}" class="btn btn-primary">Accueil</a> #}
-
-        <div class="row">
-            <div class="col-12 d-flex justify-content-around align-items-center p-3">
-                <a href="{{ path('app_index') }}" class="btn btn-primary display-3">Accueil</a>
-                <h1 class="display-2">Liste des dossiers</h1>
-                <a href="{{ path('option_list') }}" class="btn btn-primary display-3">Gérer Options</a>
-            </div>
-            <hr style="height: 2px">
-        </div>
-
-        <table class="table table-striped">
+        <table class="table table-striped text-center">
             <thead>
             <tr>
                 <th scope="col">Numéro de dossier</th>
@@ -29,7 +20,7 @@
                     <th scope="row">{{ folder.norlogReference }}</th>
                     <td>{{ folder.createdAt ? folder.createdAt|date('d-m-Y') : '' }}</td>
                     <td>
-                        <a href="{{ path('folder_edit', {'id': folder.id}) }}"><i class="fas fa-edit"></i></a>
+                        <a class="btn btn-xl btn-primary" href="{{ path('folder_edit', {'id': folder.id}) }}"><i class="fas fa-edit"></i></a>
                     </td>
                 </tr>
             {% else %}
@@ -40,10 +31,14 @@
             </tbody>
         </table>
 
-        <div class="row d-flex justify-content-center align-items-center mt-3 mb-3">
+        <div class="navigation justify-content-center mt-4">
+            {{ knp_pagination_render(norlogFolders) }}
+        </div>
+
+        <div class="row d-flex justify-content-center align-items-center mt-1">
             <div class="col-12">
-                <a class="btn btn-primary" href="{{ path('sku_export') }}">Exporter Skus</a>
-                <a class="btn btn-primary" href="{{ path('sku_list') }}">Lister Skus</a>
+                <a class="btn btn-primary btn-nav w-100 m-2" href="{{ path('sku_export') }}">Exporter Skus</a>
+                <a class="btn btn-info btn-nav w-100 m-2" href="{{ path('sku_list') }}">Lister Skus</a>
             </div>
         </div>
     </div>

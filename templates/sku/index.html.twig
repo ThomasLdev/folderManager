@@ -1,57 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Skus{% endblock %}
+{% block title %}Liste des produits{% endblock %}
+
+{% block pageName %}Liste des produits{% endblock %}
 
 {% block body %}
-    <div class="container">
-
-        <div class="row">
-            <div class="col-12 d-flex justify-content-around align-items-center p-3">
-                <a href="{{ path('app_index') }}" class="btn btn-primary display-3">Accueil</a>
-                <h1 class="display-2">Liste des Skus</h1>
-                <a href="{{ path('option_list') }}" class="btn btn-primary display-3">Gérer Options</a>
-            </div>
-            <hr style="height: 2px">
-        </div>
-
-        <div class="row">
-            <table class="table table-striped" style="border: 1px solid #000000;">
-                <thead>
-                <tr>
-                    <th>SKU</th>
-                    <th>Reference Dossier</th>
-                    <th>Exporté</th>
-                    <th>Date de création</th>
-                    <th>Modifier</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for sku in skus %}
-                    <tr>
-                        <td>{{ sku.sku }}</td>
-                        {% if sku.folder %}
-                            <td>{{ sku.folder }}</td>
-                        {% else %}
-                            <td>Pas de dossier</td>
-                        {% endif %}
-                        <td>{{ sku.exported ? 'Oui' : 'Non' }}</td>
-                        <td>{{ sku.createdAt ? sku.createdAt|date('d-m-Y') : '' }}</td>
-                        <td>
-                            <a href="{{ path('sku_edit', {'id': sku.id}) }}"><i class="fas fa-edit"></i></a>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="14">Pas de Sku existant</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
+    <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <a class="btn btn-primary">Exporter Skus</a>
+                <table class="table table-striped text-center">
+                    <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Reference Dossier</th>
+                        <th>Exporté</th>
+                        <th>Date de création</th>
+                        <th>Modifier</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for sku in skus %}
+                        <tr>
+                            <td>{{ sku.sku }}</td>
+                            {% if sku.folder %}
+                                <td>{{ sku.folder }}</td>
+                            {% else %}
+                                <td>Pas de dossier</td>
+                            {% endif %}
+                            <td>{{ sku.exported ? 'Oui' : 'Non' }}</td>
+                            <td>{{ sku.createdAt ? sku.createdAt|date('d-m-Y') : '' }}</td>
+                            <td>
+                                <a href="{{ path('sku_edit', {'id': sku.id}) }}"><i class="fas fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="14">Pas de Sku existant</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="navigation justify-content-center mt-4">
+                    {{ knp_pagination_render(skus) }}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-12">
+                <a href="{{ path('folder_list') }}" class="btn btn-primary btn-xl">Retour Dossiers</a>
             </div>
         </div>
     </div>
